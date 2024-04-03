@@ -1,0 +1,9 @@
+/* Add your CSS styles here */
+.container {
+    width: 80%;
+    margin: auto;
+}
+.header, .navigation, .body, .footer {
+    margin: 10px 0;
+}
+/* Add more styling as needed */
