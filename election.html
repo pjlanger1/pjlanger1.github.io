@@ -3,6 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>The Joy of Living Through Another Election Year</title>
+    <style>
+    pre {
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            overflow: auto;
+        }
+        code {
+            color: #555;
+            font-family: monospace;
+        }
+        </style>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-mml-chtml.js"></script>
 </head>
@@ -55,6 +68,23 @@
 
         <p>interestingly enough, this shows that for a sample size of 100, the margin of error is unacceptably large unless the spread is strictly greater than 20 between the two candidates.</p>
 
+        <p>those of you who know python should be happy about this next part. code:</p>
+
+            <pre><code>import math
+
+# Given values
+n = 100  # Sample size
+Z = 1.96  # Z-score for a 95% confidence level
+
+# Iterate over p values from 0 to 1 in increments of 0.05
+for n in [j*100 for j in range(1,11)]:
+    print('for n: ' + str(n))
+    for p in [i * 0.05 for i in range(21)]:
+        SE = math.sqrt((p * (1 - p)) / n)
+        MOE = Z * SE
+        print(f'p = {{p:.2f}}, MOE = {{MOE:.4f}}')
+</code></pre>
+        
         <p>below, i show a similar chart, representing the effect of sample size (the denominator of our formula) on the margin of error of various vote shares of Candidate A.</p>
         
         <img src="images/moe_2.png" alt="Sample Image" width="600">
