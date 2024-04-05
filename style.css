@@ -4,6 +4,10 @@
     padding: 0;
 }
 
+body {
+    font-family: 'Courier', monospace;
+}
+
 /* Styles for the header */
 .header {
     text-align: center;
