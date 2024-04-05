@@ -56,6 +56,10 @@ body {
     padding: 20px;
 }
 
+.body p {
+    margin-bottom: 20px; /* Adjust this value to control the space between paragraphs */
+}
+
 /* Styles for the footer */
 .footer {
     text-align: center;
