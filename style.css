@@ -18,16 +18,16 @@
 }
 
 .navigation ul {
-    list-style-type: none;
+    list-style-type: none; /* Remove bullet points */
     margin: 0;
     padding: 0;
 }
 
-.navigation ul li {
+.navigation li {
     float: left;
 }
 
-.navigation ul li a {
+.navigation a {
     display: block;
     text-align: center;
     padding: 14px 16px;
@@ -35,7 +35,7 @@
     color: white;
 }
 
-.navigation ul li a:hover {
+.navigation a:hover {
     background-color: #ddd;
     color: black;
 }
