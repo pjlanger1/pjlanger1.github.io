@@ -6,6 +6,10 @@
 
 body {
     font-family: 'Courier', monospace;
+    background-color: gray; /* Set background color to gray */
+    background-image: url('/images/bikelogo.jpg'); /* Replace 'background.jpg' with your actual image file */
+    background-size: cover; /* Cover the entire background */
+    background-repeat: no-repeat; /* Prevent the background from repeating */
 }
 
 /* Styles for the header */
@@ -43,6 +47,8 @@ body {
     background-color: #ddd;
     color: black;
 }
+
+
 
 /* Clear floats */
 .navigation::after {
