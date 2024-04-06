@@ -6,9 +6,9 @@
 
 body {
     font-family: 'Courier', monospace;
-    background-color: gray; /* Set background color to gray */
+    background-color: white; /* Set background color to gray */
     background-image: url('/images/bikelogo.jpg'); /* Replace 'background.jpg' with your actual image file */
-    background-size: cover; /* Cover the entire background */
+    background-size: 40%; /* Cover the entire background */
     background-repeat: no-repeat; /* Prevent the background from repeating */
 }
 
