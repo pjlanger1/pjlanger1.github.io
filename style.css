@@ -18,15 +18,18 @@ body, html {
     font-family: 'Montserrat', sans-serif;
 }
 
-header, footer {
+header {
     background-color: #f4f4f4;
     padding: 10px 20px;
     text-align: center;
+    position: relative; /* Ensures absolute children are positioned relative to header */
 }
 
 nav ul {
     list-style-type: none;
     padding: 0;
+    margin: 0; /* Ensures the nav is centered in header without default margin */
+    display: inline-block; /* Center nav items */
 }
 
 nav ul li {
@@ -43,6 +46,12 @@ h1, h2 {
     font-family: 'Montserrat', sans-serif;
 }
 
+footer {
+    background-color: #f4f4f4;
+    padding: 10px 20px;
+    text-align: center;
+}
+
 footer p {
     font-family: 'Montserrat', sans-serif;
 }
@@ -53,8 +62,12 @@ footer p {
 }
 
 .search-container {
-    position: relative;
-    width: 300px;
+    position: absolute; /* Position absolute to float over other elements */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust positioning to center exactly */
+    width: 300px; /* Set a specific width */
+    z-index: 1001; /* Higher z-index to be on top */
 }
 
 .search-input {
@@ -73,9 +86,8 @@ footer p {
 
 .search-results {
     position: absolute;
-    top: 100%;
+    top: 38px; /* Position directly below the input box */
     left: 0;
-    z-index: 1000;
     width: 100%;
     background: rgba(255, 255, 255, 0.9); /* Semi-translucent white */
     border: 1px solid #ccc;
