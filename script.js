@@ -42,6 +42,47 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 markers[location.old_id] = marker;
             });
+            setupSearch(locations, markers);
         })
         .catch(error => console.error('Error loading JSON data:', error));
+
+    function setupSearch(locations, markers) {
+        const searchBar = document.getElementById('search-bar');
+        const searchResults = document.getElementById('search-results');
+
+        searchBar.addEventListener('input', function() {
+            const value = this.value.toLowerCase();
+            const filteredLocations = locations.filter(location => 
+                location.name.toLowerCase().includes(value)
+            ).slice(0, 10); // Limit results to 10 items
+            displaySearchResults(filteredLocations, markers, map);
+        });
+    }
+
+    function displaySearchResults(filteredLocations, markers, map) {
+        const searchResults = document.getElementById('search-results');
+        searchResults.innerHTML = '';
+        filteredLocations.forEach(location => {
+            const div = document.createElement('div');
+            div.textContent = location.name;
+            div.className = 'search-result-item';
+            div.onclick = function() {
+                if (lastSelectedMarker) {
+                    lastSelectedMarker.setIcon(customIcon); // Reset the last selected marker
+                }
+                const selectedMarker = markers[location.old_id];
+                if (selectedMarker) {
+                    selectedMarker.setIcon(selectedIcon);
+                    map.setView([location.lat, location.lon], 17);
+                    selectedMarker.openPopup();
+                    lastSelectedMarker = selectedMarker; // Update the last selected marker
+                }
+                searchBar.value = location.name; // Fill the search bar with the selected location name
+                searchResults.innerHTML = ''; // Clear search results after selection
+                searchResults.style.display = 'none'; // Hide results
+            };
+            searchResults.appendChild(div);
+        });
+        searchResults.style.display = filteredLocations.length > 0 ? 'block' : 'none';
+    }
 });
