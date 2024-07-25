@@ -27,9 +27,14 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch('https://raw.githubusercontent.com/pjlanger1/pjlanger1.github.io/c1663b28bab1c2201485af8c7d8c507c8637d50d/ref_data/bwref082024.json')
         .then(response => response.json())
         .then(data => {
-            locations = Object.values(data);
+            const locations = Object.values(data);
+            locations.forEach(location => {
+                const marker = L.marker([location.lat, location.lon], {icon: customIcon})
+                    .addTo(map)
+                    .bindPopup(location.name);
+                markers[location.old_id] = marker;
+            });
             setupSearch(locations);
-            updateMapMarkers(locations, map); // Initially plot all markers
         })
         .catch(error => console.error('Error loading JSON data:', error));
 
@@ -58,20 +63,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     markers[location.old_id].openPopup();
                     searchBar.value = location.name; // Fill the search bar with the selected location name
                     searchResults.innerHTML = ''; // Clear search results after selection
+                    searchResults.style.display = 'none'; // Hide results
                 };
                 searchResults.appendChild(div);
             });
             searchResults.style.display = filteredLocations.length > 0 ? 'block' : 'none';
         }
-    }
-
-    function updateMapMarkers(locations, map) {
-        locations.forEach(location => {
-            if (!markers[location.old_id]) {
-                markers[location.old_id] = L.marker([location.lat, location.lon], {icon: customIcon})
-                    .addTo(map)
-                    .bindPopup(location.name);
-            }
-        });
     }
 });
