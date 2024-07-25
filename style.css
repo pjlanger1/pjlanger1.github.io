@@ -56,15 +56,6 @@ footer p {
     font-family: 'Montserrat', sans-serif;
 }
 
-.search-container {
-    position: absolute; /* Absolute positioning relative to the nearest positioned ancestor */
-    top: 10px; /* Position it 10px from the top of the page */
-    left: 50%; /* Center horizontally relative to the map */
-    transform: translateX(-50%); /* Center it exactly by its width */
-    width: 300px; /* Specific width of the search container */
-    z-index: 1001; /* Ensure it's above the map and other elements */
-}
-
 #map {
     position: relative; /* Makes the map a positioned ancestor for absolute elements */
     width: 100%;
@@ -72,8 +63,14 @@ footer p {
     z-index: 1000; /* Lower than the search container to ensure it does not overlap */
 }
 
+.search-container {
+    width: 100%; /* Full width to match the content area or adjust as needed */
+    padding: 10px 0; /* Add some vertical padding */
+    text-align: center; /* Center the search bar within the container */
+}
+
 .search-input {
-    width: 100%;
+    width: 300px; /* Fixed width */
     padding: 8px 10px;
     font-size: 16px;
     border: 2px solid #ccc;
@@ -88,9 +85,10 @@ footer p {
 
 .search-results {
     position: absolute;
-    top: 38px; /* Position directly below the input box */
-    left: 0;
-    width: 100%;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
     background: rgba(255, 255, 255, 0.9); /* Semi-translucent white */
     border: 1px solid #ccc;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
@@ -108,4 +106,3 @@ footer p {
 .search-result-item:hover {
     background-color: #f8f9fa; /* Light grey background on hover */
 }
-
