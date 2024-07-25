@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tech Company Landing Page</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
 </head>
 <body>
     <header>
@@ -16,8 +17,10 @@
                 <li><a href="#about">About</a></li>
             </ul>
         </nav>
+        <input type="text" id="search-bar" placeholder="Search Locations...">
     </header>
     <main>
+        <div id="map" style="height: 400px;"></div>
         <section id="home">
             <h2>Revolutionizing Tech Solutions</h2>
             <p>Innovate and accelerate with our cutting-edge technology solutions tailored for your business needs.</p>
@@ -34,6 +37,7 @@
     <footer>
         <p>&copy; 2024 Tech Company, Inc. All rights reserved.</p>
     </footer>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
