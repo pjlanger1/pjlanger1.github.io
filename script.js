@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
         popupAnchor: [1, -34]
     });
 
+    const foof = 0;
+
     var selectedIcon = L.icon({
         iconUrl: 'images/marker-icon-selected.png',
         iconSize: [25, 41],
