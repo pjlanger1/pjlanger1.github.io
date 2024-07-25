@@ -83,11 +83,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getDistance(point1, point2) {
-        const R = 6371; // Earth's radius in kilometers
-        const dLat = degreesToRadians(point2.lat - point1.lat);
-        const dLon = degreesToRadians(point2.lon - point1.lon);
-        const a = 
-            Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(degreesToRadians(point1.lat)) * Math.cos(degreesToRadians(point2.lat)) *
-            Math.sin(dLon/2) * Math.sin(dLon/2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a
+            const R = 6371; // Radius of the Earth in kilometers
+            const dLat = degreesToRadians(point2.lat - point1.lat);
+            const dLon = degreesToRadians(point2.lon - point1.lon);
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(degreesToRadians(point1.lat)) * Math.cos(degreesToRadians(point2.lat)) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c; // Distance in kilometers
+        }
+    
+        function degreesToRadians(degrees) {
+            return degrees * (Math.PI/180);
+        }
+    });
