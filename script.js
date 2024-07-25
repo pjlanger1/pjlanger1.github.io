@@ -1,12 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize the map centered on New York City
     var map = L.map('map').setView([40.730610, -73.935242], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: 'Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.',
         maxZoom: 19,
-        attribution: '© OpenStreetMap contributors'
+        subdomains: 'abcd',
+        minZoom: 0
     }).addTo(map);
 
-    // Fetching location data for the search bar and map plotting
+    // Define a custom icon
+    var customIcon = L.icon({
+        iconUrl: 'images/marker-icon.png',
+        iconSize: [25, 41], // Size of the icon
+        iconAnchor: [12, 41], // Point of the icon which will correspond to marker's location
+        popupAnchor: [1, -34] // Point from which the popup should open relative to the iconAnchor
+    });
+
+    let locations = [];
+
     fetch('https://raw.githubusercontent.com/pjlanger1/pjlanger1.github.io/c1663b28bab1c2201485af8c7d8c507c8637d50d/ref_data/bwref082024.json')
         .then(response => response.json())
         .then(data => {
@@ -53,48 +63,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         locations.forEach(location => {
-            L.marker([location.lat, location.lon]).addTo(map)
+            L.marker([location.lat, location.lon], {icon: customIcon}).addTo(map) // Use custom icon
                 .bindPopup(location.name);
         });
     }
-
-    document.getElementById('locate-btn').addEventListener('click', function() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                const userLocation = { lat: position.coords.latitude, lon: position.coords.longitude };
-                const nearest = findNearestLocation(userLocation, locations);
-                map.setView([nearest.lat, nearest.lon], 16);
-                L.marker([nearest.lat, nearest.lon]).addTo(map)
-                    .bindPopup(nearest.name).openPopup();
-            }, function(error) {
-                alert('Error obtaining location: ' + error.message);
-            });
-        } else {
-            alert('Geolocation is not supported by this browser.');
-        }
-    });
-
-    function findNearestLocation(userLocation, locations) {
-        return locations.reduce((prev, curr) => {
-            let prevDistance = getDistance(userLocation, prev);
-            let currDistance = getDistance(userLocation, curr);
-            return (prevDistance < currDistance) ? prev : curr;
-        });
-    }
-
-    function getDistance(point1, point2) {
-            const R = 6371; // Radius of the Earth in kilometers
-            const dLat = degreesToRadians(point2.lat - point1.lat);
-            const dLon = degreesToRadians(point2.lon - point1.lon);
-            const a = 
-                Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(degreesToRadians(point1.lat)) * Math.cos(degreesToRadians(point2.lat)) *
-                Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            return R * c; // Distance in kilometers
-        }
-    
-        function degreesToRadians(degrees) {
-            return degrees * (Math.PI/180);
-        }
-    });
+});
