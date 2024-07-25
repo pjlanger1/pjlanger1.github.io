@@ -15,8 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
         popupAnchor: [1, -34]
     });
 
-    const foof = 0;
-
     var selectedIcon = L.icon({
         iconUrl: 'images/marker-icon-selected.png',
         iconSize: [25, 41],
@@ -61,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 div.onclick = function() {
                     Object.values(markers).forEach(marker => marker.setIcon(customIcon)); // Reset all markers
                     markers[location.old_id].setIcon(selectedIcon); // Highlight the selected marker
-                    map.setView([location.lat, location.lon], 13); // Zoom to about 2 miles
+                    map.setView([location.lat, location.lon], 16); // Zoom to a closer view
                     markers[location.old_id].openPopup();
                     searchBar.value = location.name; // Fill the search bar with the selected location name
                     searchResults.innerHTML = ''; // Clear search results after selection
