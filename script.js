@@ -23,7 +23,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     let markers = {};
-    let lastSelectedMarker = null;  // Track the last selected marker
+    let lastSelectedMarker = null;
+    const searchBar = document.getElementById('search-bar');
+    const searchResults = document.getElementById('search-results');
 
     fetch('https://raw.githubusercontent.com/pjlanger1/pjlanger1.github.io/c1663b28bab1c2201485af8c7d8c507c8637d50d/ref_data/bwref082024.json')
         .then(response => response.json())
@@ -35,10 +37,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     .bindPopup(location.name)
                     .on('click', function() {
                         if (lastSelectedMarker) {
-                            lastSelectedMarker.setIcon(customIcon); // Reset the last selected marker
+                            lastSelectedMarker.setIcon(customIcon);
                         }
-                        marker.setIcon(selectedIcon); // Set this marker to selected
-                        lastSelectedMarker = marker; // Update the last selected marker
+                        marker.setIcon(selectedIcon);
+                        lastSelectedMarker = marker;
                     });
                 markers[location.old_id] = marker;
             });
@@ -47,9 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => console.error('Error loading JSON data:', error));
 
     function setupSearch(locations, markers) {
-        const searchBar = document.getElementById('search-bar');
-        const searchResults = document.getElementById('search-results');
-
         searchBar.addEventListener('input', function() {
             const value = this.value.toLowerCase();
             const filteredLocations = locations.filter(location => 
@@ -60,7 +59,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displaySearchResults(filteredLocations, markers, map) {
-        const searchResults = document.getElementById('search-results');
         searchResults.innerHTML = '';
         filteredLocations.forEach(location => {
             const div = document.createElement('div');
@@ -68,21 +66,27 @@ document.addEventListener('DOMContentLoaded', function() {
             div.className = 'search-result-item';
             div.onclick = function() {
                 if (lastSelectedMarker) {
-                    lastSelectedMarker.setIcon(customIcon); // Reset the last selected marker
+                    lastSelectedMarker.setIcon(customIcon);
                 }
                 const selectedMarker = markers[location.old_id];
                 if (selectedMarker) {
                     selectedMarker.setIcon(selectedIcon);
                     map.setView([location.lat, location.lon], 17);
                     selectedMarker.openPopup();
-                    lastSelectedMarker = selectedMarker; // Update the last selected marker
+                    lastSelectedMarker = selectedMarker;
                 }
-                searchBar.value = location.name; // Fill the search bar with the selected location name
-                searchResults.innerHTML = ''; // Clear search results after selection
+                searchBar.value = location.name;
                 searchResults.style.display = 'none'; // Hide results
             };
             searchResults.appendChild(div);
         });
-        searchResults.style.display = filteredLocations.length > 0 ? 'block' : 'none';
+        searchResults.style.display = 'block'; // Show results
     }
+
+    // Hide search results when clicking outside the search bar or results
+    document.addEventListener('click', function(event) {
+        if (!searchBar.contains(event.target) && !searchResults.contains(event.target)) {
+            searchResults.style.display = 'none';
+        }
+    });
 });
