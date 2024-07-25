@@ -67,6 +67,8 @@ footer p {
     width: 100%; /* Full width to match the content area or adjust as needed */
     padding: 10px 0; /* Add some vertical padding */
     text-align: center; /* Center the search bar within the container */
+    position: relative; /* Establish a stacking context */
+    z-index: 1001; /* Ensures it's above the map and other elements */
 }
 
 .search-input {
@@ -77,6 +79,7 @@ footer p {
     border-radius: 4px;
     outline: none;
     transition: border-color 0.3s;
+    margin: 0 auto; /* Center the input field if container is wider */
 }
 
 .search-input:focus {
@@ -85,13 +88,13 @@ footer p {
 
 .search-results {
     position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 300px;
-    background: rgba(255, 255, 255, 0.9); /* Semi-translucent white */
+    top: 100%; /* Position directly below the input box */
+    left: 50%; /* Center beneath the search input */
+    transform: translateX(-50%); /* Correct horizontal positioning */
+    width: 300px; /* Match width of the search input */
+    background: rgba(255, 255, 255, 0.95); /* Nearly opaque white */
     border: 1px solid #ccc;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     max-height: 200px;
     overflow-y: auto;
     display: none; /* Initially hidden, shown on search */
@@ -105,4 +108,9 @@ footer p {
 
 .search-result-item:hover {
     background-color: #f8f9fa; /* Light grey background on hover */
+}
+
+
+.search-input:focus {
+    border-color: #007BFF; /* Focus color */
 }
