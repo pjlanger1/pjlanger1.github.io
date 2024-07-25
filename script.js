@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch('https://raw.githubusercontent.com/pjlanger1/pjlanger1.github.io/c1663b28bab1c2201485af8c7d8c507c8637d50d/ref_data/bwref082024.json')
         .then(response => response.json())
         .then(data => {
-            const locations = Object.values(data);
+            locations = Object.values(data);
             setupSearch(locations);
             updateMapMarkers(locations, map); // Initially plot all markers
         })
@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
                 searchResults.appendChild(div);
             });
+            searchResults.style.display = filteredLocations.length > 0 ? 'block' : 'none';
         }
     }
 
