@@ -7,15 +7,22 @@ document.addEventListener('DOMContentLoaded', function() {
         minZoom: 0
     }).addTo(map);
 
-    // Define a custom icon
+    // Define custom icons
     var customIcon = L.icon({
         iconUrl: 'images/marker-icon.png',
-        iconSize: [25, 41], // Size of the icon
-        iconAnchor: [12, 41], // Point of the icon which will correspond to marker's location
-        popupAnchor: [1, -34] // Point from which the popup should open relative to the iconAnchor
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34]
     });
 
-    let locations = [];
+    var selectedIcon = L.icon({
+        iconUrl: 'images/marker-icon-selected.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34]
+    });
+
+    let markers = {};
 
     fetch('https://raw.githubusercontent.com/pjlanger1/pjlanger1.github.io/c1663b28bab1c2201485af8c7d8c507c8637d50d/ref_data/bwref082024.json')
         .then(response => response.json())
@@ -36,7 +43,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 location.name.toLowerCase().includes(value)
             ).slice(0, 10); // Limit results to 10 items
             displaySearchResults(filteredLocations);
-            updateMapMarkers(filteredLocations, map);
         });
 
         function displaySearchResults(filteredLocations) {
@@ -46,8 +52,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 div.textContent = location.name;
                 div.className = 'search-result-item';
                 div.onclick = function() {
-                    map.setView([location.lat, location.lon], 16);
-                    map.openPopup(location.name, [location.lat, location.lon]);
+                    Object.values(markers).forEach(marker => marker.setIcon(customIcon)); // Reset all markers
+                    markers[location.old_id].setIcon(selectedIcon); // Highlight the selected marker
+                    map.setView([location.lat, location.lon], 13); // Zoom to about 2 miles
+                    markers[location.old_id].openPopup();
                     searchBar.value = location.name; // Fill the search bar with the selected location name
                     searchResults.innerHTML = ''; // Clear search results after selection
                 };
@@ -58,14 +66,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateMapMarkers(locations, map) {
-        map.eachLayer(function (layer) {
-            if (layer instanceof L.Marker) {
-                map.removeLayer(layer); // Remove existing markers
-            }
-        });
         locations.forEach(location => {
-            L.marker([location.lat, location.lon], {icon: customIcon}).addTo(map) // Use custom icon
-                .bindPopup(location.name);
+            if (!markers[location.old_id]) {
+                markers[location.old_id] = L.marker([location.lat, location.lon], {icon: customIcon})
+                    .addTo(map)
+                    .bindPopup(location.name);
+            }
         });
     }
 });
