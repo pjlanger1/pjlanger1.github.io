@@ -1,18 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var map = L.map('map').setView([40.730610, -73.935242], 12); // Example coordinates (centered over NYC)
+    var map = L.map('map').setView([40.730610, -73.935242], 12); // Centered over NYC
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    let locations = [];
-
-    // Fetching location data for the search bar
-    fetch('https://github.com/pjlanger1/pjlanger1.github.io/blob/c1663b28bab1c2201485af8c7d8c507c8637d50d/ref_data/bwref082024.json')
+    // Corrected URL to fetch the raw JSON data directly
+    fetch('https://raw.githubusercontent.com/pjlanger1/pjlanger1.github.io/c1663b28bab1c2201485af8c7d8c507c8637d50d/ref_data/bwref082024.json')
         .then(response => response.json())
         .then(data => {
-            locations = Object.values(data);
+            const locations = Object.values(data);
             setupSearch(locations);
+            updateMapMarkers(locations, map); // Plot all points initially
         })
         .catch(error => console.error('Error loading JSON data:', error));
 
@@ -42,11 +42,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateMapMarkers(locations, map) {
+        // Clear existing markers
         map.eachLayer(function (layer) {
             if (layer instanceof L.Marker) {
                 map.removeLayer(layer);
             }
         });
+        // Add new markers
         locations.forEach(location => {
             L.marker([location.lat, location.lon]).addTo(map)
                 .bindPopup(location.name);
@@ -62,13 +64,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getDistance(point1, point2) {
-        // Using the Haversine formula to calculate distances more accurately over the earth's surface
-        const R = 6371; // Earth's radius in kilometers
+        const R = 6371; // Radius of the Earth in kilometers
         const dLat = degreesToRadians(point2.lat - point1.lat);
         const dLon = degreesToRadians(point2.lon - point1.lon);
         const a = 
             Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(degreesToRadians(point1.lat)) * Math.cos(degreesToRadians(point2.lat)) * 
+            Math.cos(degreesToRadians(point1.lat)) * Math.cos(degreesToRadians(point2.lat)) *
             Math.sin(dLon/2) * Math.sin(dLon/2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         return R * c; // Distance in kilometers
