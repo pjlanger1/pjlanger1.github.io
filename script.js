@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     let markers = {};
+    let lastSelectedMarker = null;  // Track the last selected marker
 
     fetch('https://raw.githubusercontent.com/pjlanger1/pjlanger1.github.io/c1663b28bab1c2201485af8c7d8c507c8637d50d/ref_data/bwref082024.json')
         .then(response => response.json())
@@ -31,43 +32,16 @@ document.addEventListener('DOMContentLoaded', function() {
             locations.forEach(location => {
                 const marker = L.marker([location.lat, location.lon], {icon: customIcon})
                     .addTo(map)
-                    .bindPopup(location.name);
+                    .bindPopup(location.name)
+                    .on('click', function() {
+                        if (lastSelectedMarker) {
+                            lastSelectedMarker.setIcon(customIcon); // Reset the last selected marker
+                        }
+                        marker.setIcon(selectedIcon); // Set this marker to selected
+                        lastSelectedMarker = marker; // Update the last selected marker
+                    });
                 markers[location.old_id] = marker;
             });
-            setupSearch(locations);
         })
         .catch(error => console.error('Error loading JSON data:', error));
-
-    function setupSearch(locations) {
-        const searchBar = document.getElementById('search-bar');
-        const searchResults = document.getElementById('search-results');
-
-        searchBar.addEventListener('input', function() {
-            const value = this.value.toLowerCase();
-            const filteredLocations = locations.filter(location => 
-                location.name.toLowerCase().includes(value)
-            ).slice(0, 10); // Limit results to 10 items
-            displaySearchResults(filteredLocations);
-        });
-
-        function displaySearchResults(filteredLocations) {
-            searchResults.innerHTML = '';
-            filteredLocations.forEach(location => {
-                const div = document.createElement('div');
-                div.textContent = location.name;
-                div.className = 'search-result-item';
-                div.onclick = function() {
-                    Object.values(markers).forEach(marker => marker.setIcon(customIcon)); // Reset all markers
-                    markers[location.old_id].setIcon(selectedIcon); // Highlight the selected marker
-                    map.setView([location.lat, location.lon], 16); // Zoom to a closer view
-                    markers[location.old_id].openPopup();
-                    searchBar.value = location.name; // Fill the search bar with the selected location name
-                    searchResults.innerHTML = ''; // Clear search results after selection
-                    searchResults.style.display = 'none'; // Hide results
-                };
-                searchResults.appendChild(div);
-            });
-            searchResults.style.display = filteredLocations.length > 0 ? 'block' : 'none';
-        }
-    }
 });
