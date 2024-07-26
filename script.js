@@ -64,8 +64,11 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .catch(error => console.error('Error loading JSON data:', error));
 
-    function updatePopupContent(location) {
-        const statusInfo = document.querySelector(`#popup-data-${location.old_id} .status-info`);
+     function updatePopupContent(location) {
+        // Escape the dot for CSS selector usage if the ID includes dots
+        const escapedId = location.old_id.replace(/\./g, '\\.');
+        
+        const statusInfo = document.querySelector(`#popup-data-${escapedId} .status-info`);
         document.querySelectorAll(`.toggle-switch input[data-id="${location.old_id}"]`).forEach(input => {
             input.addEventListener('change', function() {
                 const iconType = this.getAttribute('data-type');
@@ -73,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 let bikeType = '';
                 let rideType = '';
     
-                // Check toggle types and set messages accordingly
+                // Determine the messages based on toggle state
                 if (iconType === 'thunderbolt') {
                     bikeType = isChecked ? "Electric" : "Classic";
                 } else if (iconType === 'arrow-up') {
@@ -85,15 +88,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (message.length === 0) {
                     message = "please click icons for bike & ride type"; // Reset if no toggles are active
                 }
-                statusInfo.textContent = message;
+                if (statusInfo) {
+                    statusInfo.textContent = message;
+                }
     
-                // Optionally, adjust the display in `popup-data` container for more details
-                document.getElementById(`popup-data-${location.old_id}`).textContent = `Bike Type: ${bikeType}, Ride Type: ${rideType}`;
+                // Update detailed info in the popup-data element
+                const detailElement = document.getElementById(`popup-data-${escapedId}`);
+                if (detailElement) {
+                    detailElement.textContent = `Bike Type: ${bikeType}, Ride Type: ${rideType}`;
+                }
             });
         });
     }
-
-
+    
     function setupSearch(locations, markers) {
         searchBar.addEventListener('input', function() {
             const value = this.value.toLowerCase();
