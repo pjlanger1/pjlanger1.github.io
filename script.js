@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 statusInfo.textContent = message;
     
                 // Optionally, you can update popup data here
-                popupData.textContent = `Bike Type: ${bikeType}, Ride Type: ${rideType}`;
+                popupData.textContent = `intraday graph and drivers go here`;
             });
         });
     }
