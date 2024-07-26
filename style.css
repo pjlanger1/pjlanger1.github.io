@@ -149,6 +149,39 @@ footer p {
     overflow-y: auto; /* Allow scroll if content is too long */
 }
 
+.toggle-switch input[type="checkbox"] {
+    visibility: hidden; /* Hides the checkbox but keeps it in the flow for accessibility */
+    position: absolute; /* Optionally position it out of the visible area */
+    margin-left: -9999px; /* Move it off-screen if necessary */
+}
+
+.toggle-switch .slider {
+    display: inline-block;
+    width: 34px; /* Width of the slider area */
+    height: 20px; /* Height of the slider area */
+    position: relative;
+    cursor: pointer;
+    background-color: #ccc; /* Background of the slider when off */
+    transition: background-color 0.4s;
+}
+
+.toggle-switch .slider.round {
+    border-radius: 34px; /* Rounded corners for the slider */
+}
+
+.toggle-switch .slider.round img {
+    position: absolute;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Ensure the centering is precise */
+    pointer-events: none; /* Prevents the image from interfering with toggle functionality */
+}
+
+.toggle-switch input[type="checkbox"]:checked + .slider {
+    background-color: #4CAF50; /* Green background when on */
+}
+
+
 /* Responsive adjustments */
 @media (max-width: 600px) {
     .search-input, .search-results {
