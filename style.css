@@ -16,25 +16,28 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: 'Montserrat', sans-serif;
+    background-color: #f4f4f4; /* Consistent background color */
 }
 
 header {
-    background-color: #f4f4f4;
+    background-color: #333; /* Dark grey to match theme */
+    color: #fff; /* White text for contrast */
     padding: 10px 20px;
     text-align: center;
-    position: relative; /* Ensures absolute children are positioned relative to header */
+    position: relative; 
 }
 
 nav ul {
     list-style-type: none;
     padding: 0;
-    margin: 0; /* Ensures the nav is centered in header without default margin */
-    display: inline-block; /* Center nav items */
+    margin: 0; 
+    display: inline-block;
 }
 
 nav ul li {
     display: inline;
     margin-right: 10px;
+    color: #fff; /* Ensuring text is visible on dark background */
 }
 
 main {
@@ -44,16 +47,18 @@ main {
 
 h1, h2 {
     font-family: 'Montserrat', sans-serif;
+    color: #333; /* Dark text for headings */
 }
 
 .g1, .g2 {
     font-family: 'Montserrat', sans-serif;
     font-weight: 300;  
-    color: rgba(128, 128, 128, 0.5);       
+    color: rgba(128, 128, 128, 0.5); /* Subtle grey text */
 }
 
 footer {
-    background-color: #f4f4f4;
+    background-color: #333; /* Dark grey */
+    color: #fff; /* White text */
     padding: 10px 20px;
     text-align: center;
 }
@@ -63,47 +68,47 @@ footer p {
 }
 
 #map {
-    position: relative; /* Makes the map a positioned ancestor for absolute elements */
+    position: relative;
     width: 100%;
-    height: 400px; /* Maintain the set height */
-    z-index: 1000; /* Lower than the search container to ensure it does not overlap */
+    height: 400px;
+    z-index: 1000;
 }
 
 .search-container {
-    width: 100%; /* Full width to match the content area or adjust as needed */
-    padding: 10px 0; /* Add some vertical padding */
-    text-align: center; /* Center the search bar within the container */
-    position: relative; /* Establish a stacking context */
-    z-index: 1001; /* Ensures it's above the map and other elements */
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    position: relative;
+    z-index: 1001;
 }
 
 .search-input {
-    width: 300px; /* Fixed width */
+    width: 300px;
     padding: 8px 10px;
     font-size: 16px;
     border: 2px solid #ccc;
     border-radius: 4px;
     outline: none;
     transition: border-color 0.3s;
-    margin: 0 auto; /* Center the input field if container is wider */
+    margin: 0 auto;
 }
 
 .search-input:focus {
-    border-color: #007BFF; /* Focus color */
+    border-color: #007BFF; /* Blue focus color for visibility */
 }
 
 .search-results {
     position: absolute;
-    top: 100%; /* Position directly below the input box */
-    left: 50%; /* Center beneath the search input */
-    transform: translateX(-50%); /* Correct horizontal positioning */
-    width: 300px; /* Match width of the search input */
-    background: rgba(255, 255, 255, 0.95); /* Nearly opaque white */
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    background: rgba(255, 255, 255, 0.95);
     border: 1px solid #ccc;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     max-height: 200px;
     overflow-y: auto;
-    display: none; /* Initially hidden, shown on search */
+    display: none;
 }
 
 .search-result-item {
@@ -113,29 +118,24 @@ footer p {
 }
 
 .search-result-item:hover {
-    background-color: #f8f9fa; /* Light grey background on hover */
+    background-color: #f8f9fa;
 }
 
-
-.search-input:focus {
-    border-color: #007BFF; /* Focus color */
+/* Leaflet Popup Specific Styling */
+.leaflet-popup-content-wrapper {
+    background: #333; /* Dark grey background */
+    color: #fff; /* White text color */
+    font-family: 'Montserrat', sans-serif; /* Maintaining consistent font family */
 }
 
-.popup-content {
-    color: #f0f0f0; /* Light grey text */
-    background-color: #333; /* Dark grey background */
-    padding: 10px;
-    width: 250px; /* Adjust based on your content needs */
+.leaflet-popup-content {
+    max-width: 300px; /* Adjust width as needed */
+    overflow-y: auto; /* Enable scrolling for overflow content */
 }
 
-.popup-content h4 {
-    color: #fff; /* White for headings */
-}
-
-.popup-content img {
-    width: 100%; /* Responsive image width */
-    height: auto; /* Maintain aspect ratio */
-    margin-bottom: 10px;
+.leaflet-popup-content h4 {
+    margin: 10px 0; /* Add some margin to the title */
+    color: #fff; /* White for visibility */
 }
 
 .graph-container {
