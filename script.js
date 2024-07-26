@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
         minZoom: 0
     }).addTo(map);
 
+    // Define custom icons
     var customIcon = L.icon({
         iconUrl: 'images/marker-icon.png',
         iconSize: [Math.round(25 * 0.7), Math.round(41 * 0.7)],
@@ -18,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         iconUrl: 'images/marker-icon-selected.png',
         iconSize: [25, 41],
         iconAnchor: [12, 41],
-        popupAnchor: [30, -200] 
+        popupAnchor: [30, -200]
     });
 
     let markers = {};
@@ -35,12 +36,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h4>${location.name}</h4>
                     <div class="popup-controls">
                         <label class="toggle-switch">
-                            <input type="checkbox" class="power-toggle" data-id="${location.old_id}">
-                            <span class="slider round"><img src="images/thunderbolt-off-icon.png" alt="Power" data-id="${location.old_id}" data-type="power"></span>
+                            <input type="checkbox" class="power-toggle" data-id="${location.old_id}" data-type="power">
+                            <span class="slider round"><img src="images/thunderbolt-off-icon.png" alt="Power"></span>
                         </label>
                         <label class="toggle-switch">
-                            <input type="checkbox" class="trend-toggle" data-id="${location.old_id}">
-                            <span class="slider round"><img src="images/arrow_up_off_icon.png" alt="Trend" data-id="${location.old_id}" data-type="trend"></span>
+                            <input type="checkbox" class="trend-toggle" data-id="${location.old_id}" data-type="trend">
+                            <span class="slider round"><img src="images/arrow_up_off_icon.png" alt="Trend"></span>
                         </label>
                     </div>
                     <div id="popup-data-${location.old_id}"></div>
@@ -66,8 +67,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function updatePopupContent(location) {
         document.querySelectorAll(`.toggle-switch input[data-id="${location.old_id}"]`).forEach(input => {
             input.addEventListener('change', function() {
-                const iconType = this.dataset.type;
-                const img = this.parentNode.querySelector('img');
+                const iconType = this.getAttribute('data-type');
+                const img = this.parentNode.querySelector('span img');
                 const isChecked = this.checked;
                 img.src = isChecked ? `images/${iconType}-on-icon.png` : `images/${iconType}-off-icon.png`;
             });
@@ -109,3 +110,4 @@ document.addEventListener('DOMContentLoaded', function() {
         searchResults.style.display = filteredLocations.length > 0 ? 'block' : 'none';
     }
 });
+
