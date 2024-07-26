@@ -20,8 +20,8 @@ body, html {
 }
 
 header {
-    background-color: #333; /* Dark grey to match theme */
-    color: #fff; /* White text for contrast */
+    background-color: #f4f4f4; /* Light grey background for the header */
+    color: #333; /* Dark text for contrast */
     padding: 10px 20px;
     text-align: center;
     position: relative; 
@@ -37,7 +37,7 @@ nav ul {
 nav ul li {
     display: inline;
     margin-right: 10px;
-    color: #fff; /* Ensuring text is visible on dark background */
+    color: #333; /* Dark text for visibility */
 }
 
 main {
@@ -57,8 +57,8 @@ h1, h2 {
 }
 
 footer {
-    background-color: #333; /* Dark grey */
-    color: #fff; /* White text */
+    background-color: #f4f4f4; /* Light grey background for footer */
+    color: #333; /* Dark text */
     padding: 10px 20px;
     text-align: center;
 }
@@ -121,11 +121,10 @@ footer p {
     background-color: #f8f9fa;
 }
 
-/* Leaflet Popup Specific Styling */
+/* Specific styles for leaflet popups */
 .leaflet-popup-content-wrapper {
-    background: #333; /* Dark grey background */
+    background: #333; /* Dark grey background for popups */
     color: #fff; /* White text color */
-    font-family: 'Montserrat', sans-serif; /* Maintaining consistent font family */
 }
 
 .leaflet-popup-content {
@@ -135,11 +134,4 @@ footer p {
 
 .leaflet-popup-content h4 {
     margin: 10px 0; /* Add some margin to the title */
-    color: #fff; /* White for visibility */
-}
-
-.graph-container {
-    width: 100%; /* Full width of the popup */
-    height: 100px; /* Fixed height for the graph */
-    background-color: #444; /* Slightly lighter grey for the graph background */
 }
