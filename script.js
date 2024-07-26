@@ -12,14 +12,14 @@ document.addEventListener('DOMContentLoaded', function() {
         iconUrl: 'images/marker-icon.png',
         iconSize: [Math.round(25 * 0.7), Math.round(41 * 0.7)], // 30% smaller
         iconAnchor: [Math.round(12 * 0.7), Math.round(41 * 0.7)], // Adjust anchor points proportionally
-        popupAnchor: [20, -Math.round(41 * 0.7)]
+        popupAnchor: [30, -60]
     });
 
     var selectedIcon = L.icon({
         iconUrl: 'images/marker-icon-selected.png',
         iconSize: [25, 41],
         iconAnchor: [12, 41],
-        popupAnchor: [20, -41] 
+        popupAnchor: [30, -60] 
     });
 
     let markers = {};
