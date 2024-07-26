@@ -37,11 +37,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="popup-controls">
                         <label class="toggle-switch">
                             <input type="checkbox" class="power-toggle" data-id="${location.old_id}" data-type="thunderbolt">
-                            <span class="slider round"><img src="images/thunderbolt-off-icon.png" alt="Power"></span>
+                            <span class="slider round"><img src="images/thunderbolt-off-icon.png" alt="electric"></span>
                         </label>
                         <label class="toggle-switch">
                             <input type="checkbox" class="trend-toggle" data-id="${location.old_id}" data-type="arrow-up">
-                            <span class="slider round"><img src="images/arrow-up-off-icon.png" alt="Trend"></span>
+                            <span class="slider round"><img src="images/arrow-up-off-icon.png" alt="starts/ends"></span>
                         </label>
                     </div>
                     <div class="popup-data" data-old-id="${location.old_id}"></div>
@@ -66,29 +66,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updatePopupContent(location) {
         const statusInfo = document.querySelector(`.status-info[data-old-id="${location.old_id}"]`);
-        const popupData = document.querySelector(`.popup-data[data-old-id="${location.old_id}"]`);
     
         document.querySelectorAll(`.toggle-switch input[data-id="${location.old_id}"]`).forEach(input => {
             input.addEventListener('change', function() {
                 const iconType = this.getAttribute('data-type');
                 const isChecked = this.checked;
-                let bikeType = isChecked && iconType === 'thunderbolt' ? "Electric" : "Classic";
-                let rideType = isChecked && iconType === 'arrow-up' ? "Ride Ends" : "Ride Starts";
-    
-                if (!isChecked) {
-                    bikeType = iconType === 'thunderbolt' ? "Classic" : bikeType;
-                    rideType = iconType === 'arrow-up' ? "Ride Starts" : rideType;
+                let img = this.parentNode.querySelector('img');
+                
+                // Determine the correct image source based on toggle state and type
+                if (iconType === 'thunderbolt') {
+                    img.src = isChecked ? "images/thunderbolt-on-icon.png" : "images/thunderbolt-off-icon.png";
+                } else if (iconType === 'arrow-up') {
+                    img.src = isChecked ? "images/arrow-up-on-icon.png" : "images/arrow-up-off-icon.png";
                 }
     
                 // Update the status message
-                let message = `${bikeType}, ${rideType}`;
-                statusInfo.textContent = message;
-    
-                // Optionally, you can update popup data here
-                popupData.textContent = `intraday graph and drivers go here`;
+                let bikeType = iconType === 'thunderbolt' ? (isChecked ? "Electric" : "Classic") : "";
+                let rideType = iconType === 'arrow-up' ? (isChecked ? "Ride Ends" : "Ride Starts") : "";
+                let message = `${bikeType}, ${rideType}`.trim();
+                statusInfo.textContent = message || "please click icons for bike & ride type";
             });
         });
     }
+
 
     function setupSearch(locations, markers) {
         searchBar.addEventListener('input', function() {
