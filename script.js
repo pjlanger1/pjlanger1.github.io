@@ -33,19 +33,19 @@ document.addEventListener('DOMContentLoaded', function() {
         Object.values(data).forEach(location => {
             const popupContent = `
                 <div class="popup-content">
-                    <h4>${location.name}</h4>
-                    <div class="popup-controls">
-                        <label class="toggle-switch">
-                            <input type="checkbox" class="power-toggle" data-id="${location.old_id}" data-type="thunderbolt">
-                            <span class="slider round"><img src="images/thunderbolt-off-icon.png" alt="electric"></span>
-                        </label>
-                        <label class="toggle-switch">
-                            <input type="checkbox" class="trend-toggle" data-id="${location.old_id}" data-type="arrow-up">
-                            <span class="slider round"><img src="images/arrow-up-off-icon.png" alt="starts/ends"></span>
-                        </label>
-                    </div>
-                    <div id="popup-data-${location.old_id}"></div>
+                <h4>${location.name} <span class="status-info" style="font-size: 6pt;">please click icons for bike & ride type</span></h4>
+                <div class="popup-controls">
+                    <label class="toggle-switch">
+                        <input type="checkbox" class="power-toggle" data-id="${location.old_id}" data-type="thunderbolt">
+                        <span class="slider round"><img src="images/thunderbolt-off-icon.png" alt="electric"></span>
+                    </label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" class="trend-toggle" data-id="${location.old_id}" data-type="arrow-up">
+                        <span class="slider round"><img src="images/arrow-up-off-icon.png" alt="starts/ends"></span>
+                    </label>
                 </div>
+                <div id="popup-data-${location.old_id}"></div>
+            </div>
             `;
             const marker = L.marker([location.lat, location.lon], {icon: customIcon})
                 .addTo(map)
@@ -65,15 +65,34 @@ document.addEventListener('DOMContentLoaded', function() {
     .catch(error => console.error('Error loading JSON data:', error));
 
     function updatePopupContent(location) {
+        const statusInfo = document.querySelector(`#popup-data-${location.old_id} .status-info`);
         document.querySelectorAll(`.toggle-switch input[data-id="${location.old_id}"]`).forEach(input => {
             input.addEventListener('change', function() {
                 const iconType = this.getAttribute('data-type');
-                const img = this.parentNode.querySelector('span img');
                 const isChecked = this.checked;
-                img.src = isChecked ? `images/${iconType}-on-icon.png` : `images/${iconType}-off-icon.png`;
+                let bikeType = '';
+                let rideType = '';
+    
+                // Check toggle types and set messages accordingly
+                if (iconType === 'thunderbolt') {
+                    bikeType = isChecked ? "Electric" : "Classic";
+                } else if (iconType === 'arrow-up') {
+                    rideType = isChecked ? "Ride Ends" : "Ride Starts";
+                }
+    
+                // Update the status info text
+                let message = [bikeType, rideType].filter(Boolean).join(', ');
+                if (message.length === 0) {
+                    message = "please click icons for bike & ride type"; // Reset if no toggles are active
+                }
+                statusInfo.textContent = message;
+    
+                // Optionally, adjust the display in `popup-data` container for more details
+                document.getElementById(`popup-data-${location.old_id}`).textContent = `Bike Type: ${bikeType}, Ride Type: ${rideType}`;
             });
         });
     }
+
 
     function setupSearch(locations, markers) {
         searchBar.addEventListener('input', function() {
