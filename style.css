@@ -121,17 +121,33 @@ footer p {
     background-color: #f8f9fa;
 }
 
-/* Specific styles for leaflet popups */
+/* Popup Container Style */
+.leaflet-popup {
+    width: 350px; /* Increased width for more content */
+    background-color: transparent; /* Ensuring no background from container */
+}
+
+/* Popup Content Wrapper - directly affects the content background */
 .leaflet-popup-content-wrapper {
-    background: #333; /* Dark grey background for popups */
-    color: #fff; /* White text color */
+    background: #333; /* Dark grey background */
+    color: #fff; /* White text */
+    border-radius: 8px; /* Optional: rounded corners */
+    font-family: 'Montserrat', sans-serif; /* Ensuring consistent font family */
+    padding: 1em; /* Adequate padding around the content */
 }
 
+/* Popup Tip - This is the small triangular part of the popup */
+.leaflet-popup-tip-container {
+    width: 40px; /* Adjust width of the tip for a better alignment */
+    height: 20px; /* Adjust height of the tip */
+}
+
+.leaflet-popup-tip {
+    background: #333; /* Matching the tip color with the content wrapper */
+}
+
+/* Content specific adjustments */
 .leaflet-popup-content {
-    max-width: 300px; /* Adjust width as needed */
-    overflow-y: auto; /* Enable scrolling for overflow content */
-}
-
-.leaflet-popup-content h4 {
-    margin: 10px 0; /* Add some margin to the title */
+    max-height: 200px; /* Setting a max height with scrolling enabled */
+    overflow-y: auto; /* Allow scroll if content is too long */
 }
