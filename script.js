@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Define custom icons
     var customIcon = L.icon({
         iconUrl: 'images/marker-icon.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34]
+        iconSize: [Math.round(25 * 0.7), Math.round(41 * 0.7)], // 30% smaller
+        iconAnchor: [Math.round(12 * 0.7), Math.round(41 * 0.7)], // Adjust anchor points proportionally
+        popupAnchor: [Math.round(1 * 0.7), Math.round(-34 * 0.7)] // Adjust popup anchor proportionally
     });
 
     var selectedIcon = L.icon({
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const selectedMarker = markers[location.old_id];
                 if (selectedMarker) {
                     selectedMarker.setIcon(selectedIcon);
-                    map.setView([location.lat, location.lon], 17);
+                    map.setView([location.lat, location.lon], 16);
                     selectedMarker.openPopup();
                     lastSelectedMarker = selectedMarker;
                 }
