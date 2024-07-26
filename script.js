@@ -33,20 +33,20 @@ document.addEventListener('DOMContentLoaded', function() {
         Object.values(data).forEach(location => {
             const popupContent = `
                 <div class="popup-content">
-                <h4>${location.name} <span class="status-info" style="font-size: 6pt;">please click icons for bike & ride type</span></h4>
-                <div class="popup-controls">
-                    <label class="toggle-switch">
-                        <input type="checkbox" class="power-toggle" data-id="${location.old_id}" data-type="thunderbolt">
-                        <span class="slider round"><img src="images/thunderbolt-off-icon.png" alt="electric"></span>
-                    </label>
-                    <label class="toggle-switch">
-                        <input type="checkbox" class="trend-toggle" data-id="${location.old_id}" data-type="arrow-up">
-                        <span class="slider round"><img src="images/arrow-up-off-icon.png" alt="starts/ends"></span>
-                    </label>
-                </div>
-                <div id="popup-data-${location.old_id}"></div>
-            </div>
-            `;
+                    <h4>${location.name} <span class="status-info" data-old-id="${location.old_id}" style="font-size: 6pt;">please click icons for bike & ride type</span></h4>
+                    <div class="popup-controls">
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="power-toggle" data-id="${location.old_id}" data-type="thunderbolt">
+                            <span class="slider round"><img src="images/thunderbolt-off-icon.png" alt="Power"></span>
+                        </label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" class="trend-toggle" data-id="${location.old_id}" data-type="arrow-up">
+                            <span class="slider round"><img src="images/arrow-up-off-icon.png" alt="Trend"></span>
+                        </label>
+                    </div>
+                    <div class="popup-data" data-old-id="${location.old_id}"></div>
+                </div> `;
+            
             const marker = L.marker([location.lat, location.lon], {icon: customIcon})
                 .addTo(map)
                 .bindPopup(popupContent)
@@ -64,43 +64,32 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .catch(error => console.error('Error loading JSON data:', error));
 
-     function updatePopupContent(location) {
-        // Escape the dot for CSS selector usage if the ID includes dots
-        const escapedId = location.old_id.replace(/\./g, '\\.');
-        
-        const statusInfo = document.querySelector(`#popup-data-${escapedId} .status-info`);
+    function updatePopupContent(location) {
+        const statusInfo = document.querySelector(`.status-info[data-old-id="${location.old_id}"]`);
+        const popupData = document.querySelector(`.popup-data[data-old-id="${location.old_id}"]`);
+    
         document.querySelectorAll(`.toggle-switch input[data-id="${location.old_id}"]`).forEach(input => {
             input.addEventListener('change', function() {
                 const iconType = this.getAttribute('data-type');
                 const isChecked = this.checked;
-                let bikeType = '';
-                let rideType = '';
+                let bikeType = isChecked && iconType === 'thunderbolt' ? "Electric" : "Classic";
+                let rideType = isChecked && iconType === 'arrow-up' ? "Ride Ends" : "Ride Starts";
     
-                // Determine the messages based on toggle state
-                if (iconType === 'thunderbolt') {
-                    bikeType = isChecked ? "Electric" : "Classic";
-                } else if (iconType === 'arrow-up') {
-                    rideType = isChecked ? "Ride Ends" : "Ride Starts";
+                if (!isChecked) {
+                    bikeType = iconType === 'thunderbolt' ? "Classic" : bikeType;
+                    rideType = iconType === 'arrow-up' ? "Ride Starts" : rideType;
                 }
     
-                // Update the status info text
-                let message = [bikeType, rideType].filter(Boolean).join(', ');
-                if (message.length === 0) {
-                    message = "please click icons for bike & ride type"; // Reset if no toggles are active
-                }
-                if (statusInfo) {
-                    statusInfo.textContent = message;
-                }
+                // Update the status message
+                let message = `${bikeType}, ${rideType}`;
+                statusInfo.textContent = message;
     
-                // Update detailed info in the popup-data element
-                const detailElement = document.getElementById(`popup-data-${escapedId}`);
-                if (detailElement) {
-                    detailElement.textContent = `Bike Type: ${bikeType}, Ride Type: ${rideType}`;
-                }
+                // Optionally, you can update popup data here
+                popupData.textContent = `Bike Type: ${bikeType}, Ride Type: ${rideType}`;
             });
         });
     }
-    
+
     function setupSearch(locations, markers) {
         searchBar.addEventListener('input', function() {
             const value = this.value.toLowerCase();
