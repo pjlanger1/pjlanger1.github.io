@@ -120,3 +120,26 @@ footer p {
 .search-input:focus {
     border-color: #007BFF; /* Focus color */
 }
+
+.popup-content {
+    color: #f0f0f0; /* Light grey text */
+    background-color: #333; /* Dark grey background */
+    padding: 10px;
+    width: 250px; /* Adjust based on your content needs */
+}
+
+.popup-content h4 {
+    color: #fff; /* White for headings */
+}
+
+.popup-content img {
+    width: 100%; /* Responsive image width */
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: 10px;
+}
+
+.graph-container {
+    width: 100%; /* Full width of the popup */
+    height: 100px; /* Fixed height for the graph */
+    background-color: #444; /* Slightly lighter grey for the graph background */
+}
