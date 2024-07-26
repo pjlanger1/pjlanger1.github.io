@@ -121,13 +121,12 @@ footer p {
     background-color: #f8f9fa;
 }
 
-/* Popup Container Style */
+/* Popup styles */
 .leaflet-popup {
     width: 350px; /* Increased width for more content */
     background-color: transparent; /* Ensuring no background from container */
 }
 
-/* Popup Content Wrapper - directly affects the content background */
 .leaflet-popup-content-wrapper {
     background: #333; /* Dark grey background */
     color: #fff; /* White text */
@@ -136,7 +135,6 @@ footer p {
     padding: 1em; /* Adequate padding around the content */
 }
 
-/* Popup Tip - This is the small triangular part of the popup */
 .leaflet-popup-tip-container {
     width: 40px; /* Adjust width of the tip for a better alignment */
     height: 20px; /* Adjust height of the tip */
@@ -146,8 +144,28 @@ footer p {
     background: #333; /* Matching the tip color with the content wrapper */
 }
 
-/* Content specific adjustments */
 .leaflet-popup-content {
     max-height: 200px; /* Setting a max height with scrolling enabled */
     overflow-y: auto; /* Allow scroll if content is too long */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .search-input, .search-results {
+        width: 90%;  // Makes search bar and results wider on smaller screens
+    }
+
+    .leaflet-popup {
+        width: 90%;  // Makes popup wider on smaller screens
+    }
+
+    nav ul {
+        display: block;  // Stacks nav items vertically on smaller screens
+        text-align: center;
+    }
+
+    nav ul li {
+        display: block;  // Stacks nav items vertically
+        margin: 5px 0;  // Adds space between items
+    }
 }
