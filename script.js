@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Define custom icons
     var customIcon = L.icon({
         iconUrl: 'images/marker-icon.png',
-        iconSize: [Math.round(25 * 0.7), Math.round(41 * 0.7)], // 30% smaller
-        iconAnchor: [Math.round(12 * 0.7), Math.round(41 * 0.7)], // Adjust anchor points proportionally
+        iconSize: [Math.round(25 * 0.7), Math.round(41 * 0.7)],
+        iconAnchor: [Math.round(12 * 0.7), Math.round(41 * 0.7)],
         popupAnchor: [30, -60]
     });
 
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         iconUrl: 'images/marker-icon-selected.png',
         iconSize: [25, 41],
         iconAnchor: [12, 41],
-        popupAnchor: [30, -200] 
+        popupAnchor: [30, -200]
     });
 
     let markers = {};
@@ -30,11 +30,26 @@ document.addEventListener('DOMContentLoaded', function() {
     fetch('https://raw.githubusercontent.com/pjlanger1/pjlanger1.github.io/c1663b28bab1c2201485af8c7d8c507c8637d50d/ref_data/bwref082024.json')
         .then(response => response.json())
         .then(data => {
-            const locations = Object.values(data);
-            locations.forEach(location => {
+            data.forEach(location => {
+                const popupContent = `
+                    <div class="popup-content">
+                        <h4>${location.name}</h4>
+                        <div class="popup-controls">
+                            <label class="toggle-switch">
+                                <input type="checkbox" class="power-toggle" data-id="${location.id}">
+                                <span class="slider round"><img src="images/thunderbolt-off-icon.png" alt="Power" class="icon-power" data-id="${location.id}"></span>
+                            </label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" class="trend-toggle" data-id="${location.id}">
+                                <span class="slider round"><img src="images/arrow-up-off-icon.png" alt="Trend" class="icon-trend" data-id="${location.id}"></span>
+                            </label>
+                        </div>
+                        <div id="popup-data-${location.id}"></div>
+                    </div>
+                `;
                 const marker = L.marker([location.lat, location.lon], {icon: customIcon})
                     .addTo(map)
-                    .bindPopup(`<div class="popup-content"><h4>${location.name}</h4><p>More details here...</p></div>`)
+                    .bindPopup(popupContent)
                     .on('click', function() {
                         if (lastSelectedMarker) {
                             lastSelectedMarker.setIcon(customIcon);
@@ -49,12 +64,22 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => console.error('Error loading JSON data:', error));
 
+    function updatePopupContent(location) {
+        document.querySelectorAll('.power-toggle[data-id="' + location.id + '"], .trend-toggle[data-id="' + location.id + '"]').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const icon = document.querySelector(`.${this.className.split(' ')[0]}[data-id="${location.id}"] img`);
+                const isPower = this.classList.contains('power-toggle');
+                icon.src = this.checked ? `images/${isPower ? 'thunderbolt-on-icon.png' : 'arrow-up-on-icon.png'}` : `images/${isPower ? 'thunderbolt-off-icon.png' : 'arrow-up-off-icon.png'}`;
+            });
+        });
+    }
+
     function setupSearch(locations, markers) {
         searchBar.addEventListener('input', function() {
             const value = this.value.toLowerCase();
             const filteredLocations = locations.filter(location => 
                 location.name.toLowerCase().includes(value)
-            ).slice(0, 10); // Limit results to 10 items
+            ).slice(0, 10);
             displaySearchResults(filteredLocations, markers, map);
         });
     }
@@ -83,16 +108,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         searchResults.style.display = filteredLocations.length > 0 ? 'block' : 'none'; // Show or hide results
     }
-
-    function updatePopupContent(location) {
-        const popupContent = document.getElementById(`popup-content-${location.old_id}`);
-        popupContent.innerHTML = `<h4>${location.name}</h4><pre>${JSON.stringify(location, null, 2)}</pre>`;
-    }
-
-    // Hide search results when clicking outside the search bar or results
-    document.addEventListener('click', function(event) {
-        if (!searchBar.contains(event.target) && !searchResults.contains(event.target)) {
-            searchResults.style.display = 'none';
-        }
-    });
 });
