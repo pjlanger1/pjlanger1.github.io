@@ -37,11 +37,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="popup-controls">
                         <label class="toggle-switch">
                             <input type="checkbox" class="power-toggle" data-id="${location.old_id}" data-type="thunderbolt">
-                            <span class="slider round"><img src="images/thunderbolt-off-icon.png" alt="Power"></span>
+                            <span class="slider round"><img src="images/thunderbolt-off-icon.png" alt="electric"></span>
                         </label>
                         <label class="toggle-switch">
-                            <input type="checkbox" class="trend-toggle" data-id="${location.old_id}" data-type="arrow_up">
-                            <span class="slider round"><img src="images/arrow_up_off_icon.png" alt="Trend"></span>
+                            <input type="checkbox" class="trend-toggle" data-id="${location.old_id}" data-type="arrow-up">
+                            <span class="slider round"><img src="images/arrow-up-off-icon.png" alt="starts/ends"></span>
                         </label>
                     </div>
                     <div id="popup-data-${location.old_id}"></div>
