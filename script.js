@@ -36,11 +36,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h4>${location.name}</h4>
                     <div class="popup-controls">
                         <label class="toggle-switch">
-                            <input type="checkbox" class="power-toggle" data-id="${location.old_id}" data-type="power">
+                            <input type="checkbox" class="power-toggle" data-id="${location.old_id}" data-type="thunderbolt">
                             <span class="slider round"><img src="images/thunderbolt-off-icon.png" alt="Power"></span>
                         </label>
                         <label class="toggle-switch">
-                            <input type="checkbox" class="trend-toggle" data-id="${location.old_id}" data-type="trend">
+                            <input type="checkbox" class="trend-toggle" data-id="${location.old_id}" data-type="arrow_up">
                             <span class="slider round"><img src="images/arrow_up_off_icon.png" alt="Trend"></span>
                         </label>
                     </div>
