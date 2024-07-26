@@ -33,20 +33,21 @@ document.addEventListener('DOMContentLoaded', function() {
         Object.values(data).forEach(location => {
             const initialStatus = "Bike: Classic, Ride: End"; // Initial status
             const popupContent = `
-                <div class="popup-content">
-                    <h4>${location.name}</h4><span class="status-info">${initialStatus}</span>
-                    <div class="popup-controls">
-                        <label class="toggle-switch">
-                            <input type="checkbox" class="power-toggle" data-id="${location.old_id}" data-type="thunderbolt">
-                            <span class="slider round"><img src="images/thunderbolt-off-icon.png" alt="Power"></span>
-                        </label>
-                        <label class="toggle-switch">
-                            <input type="checkbox" class="trend-toggle" data-id="${location.old_id}" data-type="arrow-up">
-                            <span class="slider round"><img src="images/arrow_up_off_icon.png" alt="Trend"></span>
-                        </label>
-                    </div>
-                    <div id="popup-data-${location.old_id}"></div>
+            <div class="popup-content">
+                <h4>${location.name}</h4>
+                <span class="status-info" data-id="${location.old_id}">Bike: Classic, Ride: End</span>
+                <div class="popup-controls">
+                    <label class="toggle-switch">
+                        <input type="checkbox" class="power-toggle" data-id="${location.old_id}" data-type="thunderbolt">
+                        <span class="slider round"><img src="images/thunderbolt-off-icon.png" alt="Power"></span>
+                    </label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" class="trend-toggle" data-id="${location.old_id}" data-type="arrow-up">
+                        <span class="slider round"><img src="images/arrow_up_off_icon.png" alt="Trend"></span>
+                    </label>
                 </div>
+                <div id="popup-data-${location.old_id}"></div>
+            </div>
             `;
             const marker = L.marker([location.lat, location.lon], {icon: customIcon})
                 .addTo(map)
