@@ -12,14 +12,14 @@ document.addEventListener('DOMContentLoaded', function() {
         iconUrl: 'images/marker-icon.png',
         iconSize: [Math.round(25 * 0.7), Math.round(41 * 0.7)], // 30% smaller
         iconAnchor: [Math.round(12 * 0.7), Math.round(41 * 0.7)], // Adjust anchor points proportionally
-        popupAnchor: [Math.round(1 * 0.7), Math.round(-34 * 0.7)] // Adjust popup anchor proportionally
+        popupAnchor: [120, -20]
     });
 
     var selectedIcon = L.icon({
         iconUrl: 'images/marker-icon-selected.png',
         iconSize: [25, 41],
         iconAnchor: [12, 41],
-        popupAnchor: [1, -34]
+        popupAnchor: [120, -20]
     });
 
     let markers = {};
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
             locations.forEach(location => {
                 const marker = L.marker([location.lat, location.lon], {icon: customIcon})
                     .addTo(map)
-                    .bindPopup(`<div id="popup-content-${location.old_id}"><h4>${location.name}</h4><p>Loading...</p></div>`)
+                    .bindPopup(`<div class="popup-content"><h4>${location.name}</h4><p>More details here...</p></div>`)
                     .on('click', function() {
                         if (lastSelectedMarker) {
                             lastSelectedMarker.setIcon(customIcon);
