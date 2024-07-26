@@ -37,11 +37,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="popup-controls">
                             <label class="toggle-switch">
                                 <input type="checkbox" class="power-toggle" data-id="${location.old_id}">
-                                <span class="slider round"><img src="images/thunderbolt-icon.png" alt="Power"></span>
+                                <span class="slider round"><img src="/images/thunderbolt-icon.png" alt="Power"></span>
                             </label>
                             <label class="toggle-switch">
                                 <input type="checkbox" class="trend-toggle" data-id="${location.old_id}">
-                                <span class="slider round"><img src="images/arrow-up-icon.png" alt="Trend"></span>
+                                <span class="slider round"><img src="/images/arrow-up-icon.png" alt="Trend"></span>
                             </label>
                         </div>
                         <div id="popup-data-${location.old_id}"> <!-- Dynamic data displayed here --> </div>
