@@ -127,6 +127,15 @@ footer p {
     background-color: transparent; /* Ensuring no background from container */
 }
 
+/* Detailed styling for parts of the popup */
+.popup-content h4 {
+    margin-bottom: 15px; /* Adds more space below the header */
+}
+
+.popup-controls {
+    margin-top: 10px; /* Adds space above the controls */
+}
+
 .leaflet-popup-content-wrapper {
     background: #333; /* Dark grey background */
     color: #fff; /* White text */
