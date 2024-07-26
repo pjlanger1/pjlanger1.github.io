@@ -34,13 +34,14 @@ document.addEventListener('DOMContentLoaded', function() {
             locations.forEach(location => {
                 const marker = L.marker([location.lat, location.lon], {icon: customIcon})
                     .addTo(map)
-                    .bindPopup(location.name)
+                    .bindPopup(`<div id="popup-content-${location.old_id}"><h4>${location.name}</h4><p>Loading...</p></div>`)
                     .on('click', function() {
                         if (lastSelectedMarker) {
                             lastSelectedMarker.setIcon(customIcon);
                         }
                         marker.setIcon(selectedIcon);
                         lastSelectedMarker = marker;
+                        updatePopupContent(location);
                     });
                 markers[location.old_id] = marker;
             });
@@ -73,14 +74,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     selectedMarker.setIcon(selectedIcon);
                     map.setView([location.lat, location.lon], 16);
                     selectedMarker.openPopup();
-                    lastSelectedMarker = selectedMarker;
+                    lastSelectedMarker = selectedMarker; // Update the last selected marker
                 }
                 searchBar.value = location.name;
                 searchResults.style.display = 'none'; // Hide results
             };
             searchResults.appendChild(div);
         });
-        searchResults.style.display = 'block'; // Show results
+        searchResults.style.display = filteredLocations.length > 0 ? 'block' : 'none'; // Show or hide results
+    }
+
+    function updatePopupContent(location) {
+        const popupContent = document.getElementById(`popup-content-${location.old_id}`);
+        popupContent.innerHTML = `<h4>${location.name}</h4><pre>${JSON.stringify(location, null, 2)}</pre>`;
     }
 
     // Hide search results when clicking outside the search bar or results
