@@ -76,10 +76,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Dynamically update the status based on the toggle state
                 if (iconType === 'thunderbolt') {
                     const bikeType = isChecked ? "Electric" : "Classic";
-                    statusInfo.textContent = `Bike: ${bikeType}, ${location.rideType}`;
+                    statusInfo.textContent = `Bike: ${bikeType}, ${rideType}`;
                 } else if (iconType === 'arrow-up') {
                     const rideType = isChecked ? "Start" : "End";
-                    statusInfo.textContent = `Bike: ${location.bikeType}, Ride: ${rideType}`;
+                    statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
                 }
             });
         });
