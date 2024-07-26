@@ -7,9 +7,16 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
      <style>
-        .leaflet-popup-content-wrapper, .leaflet-popup-tip {
-            background-color: #000; /* Dark background for better visibility */
-            color: #fff; /* Ensuring text inside the popup is white for contrast */
+        .leaflet-popup-tip-container {
+            display: none; /* Hide the popup tip */
+        }
+        .leaflet-popup-content-wrapper {
+            background: #333; /* Dark grey background */
+            color: #fff; /* White text */
+        }
+        .leaflet-popup-content {
+            max-width: 350px; /* Optional: adjust width as needed */
+            overflow-y: auto; /* Scrollable content */
         }
     </style>
 </head>
