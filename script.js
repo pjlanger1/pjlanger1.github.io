@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     let markers = {};
-    let lastSelectedMarker = null;
     const searchBar = document.getElementById('search-bar');
     const searchResults = document.getElementById('search-results');
 
@@ -34,11 +33,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 .addTo(map)
                 .bindPopup(getPopupContent(location))
                 .on('click', function() {
-                    if (lastSelectedMarker) {
-                        lastSelectedMarker.setIcon(customIcon);
+                    if (markers.lastSelected) {
+                        markers[markers.lastSelected].setIcon(customIcon);
                     }
                     marker.setIcon(selectedIcon);
-                    lastSelectedMarker = marker;
+                    markers.lastSelected = location.old_id;
                     updatePopupContent(location);
                 });
             markers[location.old_id] = marker;
@@ -72,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const value = this.value.toLowerCase();
             const filteredLocations = locations.filter(location => 
                 location.name.toLowerCase().includes(value)
-            ).slice(0, 10);
+            );
             displaySearchResults(filteredLocations, markers, map);
         });
     }
@@ -84,11 +83,11 @@ document.addEventListener('DOMContentLoaded', function() {
             div.textContent = location.name;
             div.className = 'search-result-item';
             div.onclick = function() {
-                searchBar.value = ''; // Clear search bar on selection
-                searchResults.style.display = 'none'; // Hide search results
+                searchBar.value = location.name; // Fill the search bar with the selected location name
+                searchResults.style.display = 'none'; // Hide results
                 const selectedMarker = markers[location.old_id];
                 if (selectedMarker) {
-                    map.setView([selectedMarker.getLatLng()], 16); // Zoom in
+                    map.setView([selectedMarker.getLatLng()], 16); // Zoom and center the map on the marker
                     selectedMarker.openPopup(); // Open the popup
                 }
             };
@@ -98,41 +97,31 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updatePopupContent(location) {
+        let bikeType = "Classic"; // Default value
+        let rideType = "End";     // Default value
         const statusInfo = document.querySelector(`.status-info[data-id="${location.old_id}"]`);
+        statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
+    
         document.querySelectorAll(`.toggle-switch input[data-id="${location.old_id}"]`).forEach(input => {
             input.addEventListener('change', function() {
                 const iconType = this.getAttribute('data-type');
                 const isChecked = this.checked;
                 const img = this.parentNode.querySelector('span img');
                 img.src = isChecked ? `images/${iconType}-on-icon.png` : `images/${iconType}-off-icon.png`;
-                const bikeType = document.querySelector(`.power-toggle[data-id="${location.old_id}"]`).checked ? "Electric" : "Classic";
-                const rideType = document.querySelector(`.trend-toggle[data-id="${location.old_id}"]`).checked ? "Start" : "End";
+                if (iconType === 'thunderbolt') {
+                    bikeType = isChecked ? "Electric" : "Classic";
+                } else if (iconType === 'arrow-up') {
+                    rideType = isChecked ? "Start" : "End";
+                }
                 statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
             });
         });
     }
 
-    map.on('popupopen', function(e) {
-        attachToggleListeners(e.popup._source.options.locationId);
+    // Hide search results when clicking outside the search bar or results
+    document.addEventListener('click', function(event) {
+        if (!searchBar.contains(event.target) && !searchResults.contains(event.target)) {
+            searchResults.style.display = 'none';
+        }
     });
-
-    function attachToggleListeners(id) {
-        document.querySelectorAll(`.toggle-switch input[data-id="${id}"]`).forEach(input => {
-            input.removeEventListener('change', handleToggleChange);
-            input.addEventListener('change', handleToggleChange);
-        });
-    }
-
-    function handleToggleChange() {
-        const iconType = this.getAttribute('data-type');
-        const isChecked = this.checked;
-        const img = this.parentNode.querySelector('span img');
-        img.src = isChecked ? `images/${iconType}-on-icon.png` : `images/${iconType}-off-icon.png`;
-
-        const locationId = this.getAttribute('data-id');
-        const statusInfo = document.querySelector(`.popup-content[data-id="${locationId}"] .status-info`);
-        const bikeType = document.querySelector(`.power-toggle[data-id="${locationId}"]`).checked ? "Electric" : "Classic";
-        const rideType = document.querySelector(`.trend-toggle[data-id="${locationId}"]`).checked ? "Start" : "End";
-        statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
-    }
 });
