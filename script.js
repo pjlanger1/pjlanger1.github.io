@@ -175,40 +175,39 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     
         // Example labels for each hour of the day
-        const labels = Array.from({ length: 24 }, (_, i) => `Hour ${i}`);
-        const currentHour = new Date().getHours(); // Get the current hour to draw the line
-        console.log("currhr", currentHour);
-
+        const labels = Array.from({ length: 24 }, (_, i) => `Hour ${i + 1}`);
+        const currentHour = new Date().getHours(); // Zero-based index of the current hour
+    
+        // Access the data based on provided bikeType and rideType
+        const dataPath = bikeType.toLowerCase() + '_bike';
+        const countPath = rideType.toLowerCase() + '_count';
+        const counts = location.data[dataPath][countPath];
+    
+        // Create an array with zeros and set the value at the current hour index to a higher number to simulate a line
+        const hourIndicator = Array(24).fill(0);
+        hourIndicator[currentHour] = Math.max(...counts) * 1.2; // Ensure the line is taller than the highest bar
+    
         return {
             labels: labels,
-            datasets: [{
-                label: `${bikeType} Bike ${rideType} Count`,
-                data: location.data[bikeType.toLowerCase() + '_bike'][rideType.toLowerCase() + '_count'],
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }],
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+            datasets: [
+                {
+                    label: `${bikeType} Bike ${rideType} Count`,
+                    data: counts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
                 },
-                plugins: {
-                    annotation: {
-                        annotations: {
-                            line1: {
-                                type: 'line',
-                                xMin: currentHour,
-                                xMax: currentHour,
-                                borderColor: 'red',
-                                borderWidth: 2,
-                                borderDash: [6, 6]
-                            }
-                        }
-                    }
+                {
+                    label: 'Current Hour',
+                    data: hourIndicator,
+                    backgroundColor: 'rgba(255, 0, 0, 0.5)', // Red color for the current hour indicator
+                    borderColor: 'rgba(255, 0, 0, 1)',
+                    borderWidth: 2,
+                    type: 'line', // Render this dataset as a line
+                    fill: false, // No fill under the line
+                    pointRadius: 0 // No points on the line
                 }
-            }
+            ]
         };
     }
 
