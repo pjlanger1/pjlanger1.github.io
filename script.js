@@ -154,19 +154,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
         // Example labels for each hour of the day
         const labels = Array.from({ length: 24 }, (_, i) => `Hour ${i + 1}`);
-    
-        // Access the data based on provided bikeType and rideType
-        const dataPath = bikeType.toLowerCase() + '_bike';
-        const countPath = rideType.toLowerCase() + '_count';
-        const counts = location.data[dataPath][countPath];
-    
         const currentHour = new Date().getHours(); // Get the current hour to draw the line
-    
+        console.log("currhr", currentHour);
+
         return {
             labels: labels,
             datasets: [{
                 label: `${bikeType} Bike ${rideType} Count`,
-                data: counts,
+                data: location.data[bikeType.toLowerCase() + '_bike'][rideType.toLowerCase() + '_count'],
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
@@ -182,15 +177,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         annotations: {
                             line1: {
                                 type: 'line',
-                                yMin: 0,
-                                yMax: Math.max(...counts),
+                                xMin: currentHour,
+                                xMax: currentHour,
                                 borderColor: 'red',
                                 borderWidth: 2,
-                                label: {
-                                    enabled: true,
-                                    content: 'Current hour',
-                                    position: 'start'
-                                }
+                                borderDash: [6, 6]
                             }
                         }
                     }
@@ -198,6 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
     }
+
 
 
     // Hide search results when clicking outside the search bar or results
