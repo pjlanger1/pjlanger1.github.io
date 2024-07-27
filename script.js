@@ -143,19 +143,35 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getChartData(location, bikeType, rideType) {
-        // Modify this function based on how your actual data is structured
-        const labels = Array.from({ length: 24 }, (_, i) => `Hour ${i + 1}`); // Example labels
+        // Log the location data for debugging
+        console.log("Processing data for:", location.name, "with bike type:", bikeType, "and ride type:", rideType);
+    
+        // Check if the necessary data paths are present in the location data
+        if (!location.data || !location.data[bikeType.toLowerCase() + '_bike'] || !location.data[bikeType.toLowerCase() + '_bike'][rideType.toLowerCase() + '_count']) {
+            console.error("Required data is missing for", location.name, ":", bikeType, rideType);
+            return null; // Return null or an appropriate default structure if data is missing
+        }
+    
+        // Example labels for each hour of the day
+        const labels = Array.from({ length: 24 }, (_, i) => `Hour ${i + 1}`);
+    
+        // Access the data based on provided bikeType and rideType
+        const dataPath = bikeType.toLowerCase() + '_bike';
+        const countPath = rideType.toLowerCase() + '_count';
+        const counts = location.data[dataPath][countPath];
+    
         return {
             labels: labels,
             datasets: [{
                 label: `${bikeType} Bike ${rideType} Count`,
-                data: location.data[bikeType.toLowerCase() + '_bike'][rideType.toLowerCase() + '_count'], // Adjust based on actual data structure
+                data: counts,
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
             }]
         };
     }
+    
 
     // Hide search results when clicking outside the search bar or results
     document.addEventListener('click', function(event) {
