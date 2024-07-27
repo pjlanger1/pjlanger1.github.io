@@ -191,7 +191,7 @@ footer p {
 }
 
 
-/* Responsive adjustments 
+/* Responsive adjustments */
 @media (max-width: 600px) {
     .search-input, .search-results {
         width: 90%;  // Makes search bar and results wider on smaller screens
@@ -211,4 +211,4 @@ footer p {
         margin: 5px 0;  // Adds space between items
     }
 }
-*/
+
