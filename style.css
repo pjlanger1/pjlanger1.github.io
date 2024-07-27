@@ -187,23 +187,24 @@ footer p {
     background-color: #4CAF50;
 }
 
-/* Responsive adjustments */
+/* Responsive adjustments 
 @media (max-width: 600px) {
     .search-input, .search-results {
-        width: 95%; /* Increased to 95% to make them wider on smaller screens */
+        width: 95%;  
     }
 
     .leaflet-popup {
-        width: 95%; /* Popup width adjusted to be wider on smaller screens */
+        width: 95%; 
     }
 
     nav ul {
-        display: block; /* Stacks nav items vertically on smaller screens */
+        display: block; 
         text-align: center;
     }
 
     nav ul li {
-        display: block; /* Stacks nav items vertically */
-        margin: 10px 0; /* Increased space between items for easier tapping */
+        display: block; /* Stacks nav items vertically 
+        margin: 10px 0; 
     }
-}
+} 
+*/
