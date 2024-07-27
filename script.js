@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 } else {
                     chart[location.old_id].data = getChartData(location, bikeType, rideType);
-                    chart[location.old_id].options = chartOptions(location);
+                    //chart[location.old_id].options = chartOptions(location);
                     chart[location.old_id].update();
                 }
             });
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     backgroundColor: 'rgba(255, 0, 0, 0.5)', // Red color for the current hour indicator
                     borderColor: 'rgba(255, 0, 0, 1)',
                     borderWidth: 2,
-                    type: 'line', // Render this dataset as a line
+                    type: 'bar', // Render this dataset as a line
                     fill: false, // No fill under the line
                     pointRadius: 0 // No points on the line
                 }
