@@ -144,8 +144,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function getChartData(location, bikeType, rideType) {
         // Modify this function based on how your actual data is structured
+        const labels = Array.from({ length: 24 }, (_, i) => `Hour ${i + 1}`); // Example labels
         return {
-            labels: ['Hour 1', 'Hour 2', ..., 'Hour 24'], // Example labels
+            labels: labels,
             datasets: [{
                 label: `${bikeType} Bike ${rideType} Count`,
                 data: location.data[bikeType.toLowerCase() + '_bike'][rideType.toLowerCase() + '_count'], // Adjust based on actual data structure
