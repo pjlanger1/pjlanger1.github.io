@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     let markers = {};
+    let currentlySelectedMarker = null;
     const searchBar = document.getElementById('search-bar');
     const searchResults = document.getElementById('search-results');
 
@@ -33,22 +34,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 .addTo(map)
                 .bindPopup(getPopupContent(location))
                 .on('click', function() {
-                    if (markers.lastSelected) {
-                        markers[markers.lastSelected].setIcon(customIcon);
+                    if (currentlySelectedMarker) {
+                        currentlySelectedMarker.setIcon(customIcon);
                     }
-                    marker.setIcon(selectedIcon);
-                    markers.lastSelected = location.old_id;
-                    updatePopupContent(location);
+                    this.setIcon(selectedIcon);
+                    currentlySelectedMarker = this;
                 });
             markers[location.old_id] = marker;
         });
-        setupSearch(Object.values(data), markers);
+        setupSearch(Object.values(data), markers, map);
     })
     .catch(error => console.error('Error loading JSON data:', error));
 
     function getPopupContent(location) {
         return `
-            <div class="popup-content" data-id="${location.old_id}">
+            <div class="popup-content">
                 <h4>${location.name}</h4>
                 <span class="status-info" data-id="${location.old_id}">Bike: Classic, Ride: End</span>
                 <div class="popup-controls">
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
     }
 
-    function setupSearch(locations, markers) {
+    function setupSearch(locations, markers, map) {
         searchBar.addEventListener('input', function() {
             const value = this.value.toLowerCase();
             const filteredLocations = locations.filter(location => 
@@ -86,42 +86,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 searchBar.value = location.name; // Fill the search bar with the selected location name
                 searchResults.style.display = 'none'; // Hide results
                 const selectedMarker = markers[location.old_id];
-                if (selectedMarker) {
-                    map.setView([selectedMarker.getLatLng()], 16); // Zoom and center the map on the marker
-                    selectedMarker.openPopup(); // Open the popup
+                if (currentlySelectedMarker) {
+                    currentlySelectedMarker.setIcon(customIcon); // Reset previous marker
                 }
+                selectedMarker.setIcon(selectedIcon);
+                map.setView(selectedMarker.getLatLng(), 16); // Zoom and center the map on the marker
+                selectedMarker.openPopup(); // Open the popup
+                currentlySelectedMarker = selectedMarker; // Update the currently selected marker
             };
             searchResults.appendChild(div);
         });
         searchResults.style.display = filteredLocations.length > 0 ? 'block' : 'none';
     }
-
-    function updatePopupContent(location) {
-        let bikeType = "Classic"; // Default value
-        let rideType = "End";     // Default value
-        const statusInfo = document.querySelector(`.status-info[data-id="${location.old_id}"]`);
-        statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
-    
-        document.querySelectorAll(`.toggle-switch input[data-id="${location.old_id}"]`).forEach(input => {
-            input.addEventListener('change', function() {
-                const iconType = this.getAttribute('data-type');
-                const isChecked = this.checked;
-                const img = this.parentNode.querySelector('span img');
-                img.src = isChecked ? `images/${iconType}-on-icon.png` : `images/${iconType}-off-icon.png`;
-                if (iconType === 'thunderbolt') {
-                    bikeType = isChecked ? "Electric" : "Classic";
-                } else if (iconType === 'arrow-up') {
-                    rideType = isChecked ? "Start" : "End";
-                }
-                statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
-            });
-        });
-    }
-
-    // Hide search results when clicking outside the search bar or results
-    document.addEventListener('click', function(event) {
-        if (!searchBar.contains(event.target) && !searchResults.contains(event.target)) {
-            searchResults.style.display = 'none';
-        }
-    });
 });
