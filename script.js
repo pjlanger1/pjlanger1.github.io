@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBar = document.getElementById('search-bar');
     const searchResults = document.getElementById('search-results');
 
-    fetch('https://raw.githubusercontent.com/pjlanger1/pjlanger1.github.io/4ea6de6d184d6b96d5697547e17181ae29d2c83b/ref_data/bwref082024_2.json')
+    fetch('https://raw.githubusercontent.com/pjlanger1/pjlanger1.github.io/6b81765ad8c9f9a14346688e531a5a6480420341/ref_data/bwref082024_2.json')
     .then(response => response.json())
     .then(data => {
         Object.values(data).forEach(location => {
