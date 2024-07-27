@@ -23,12 +23,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let markers = {};
     let lastSelectedMarker = null;
+    let locationData = {}; // Store location data globally
     const searchBar = document.getElementById('search-bar');
     const searchResults = document.getElementById('search-results');
 
     fetch('https://raw.githubusercontent.com/pjlanger1/pjlanger1.github.io/6b81765ad8c9f9a14346688e531a5a6480420341/ref_data/bwref082024_2.json')
     .then(response => response.json())
     .then(data => {
+        locationData = data; // Store the fetched data globally
         Object.values(data).forEach(location => {
             const marker = L.marker([location.lat, location.lon], {icon: customIcon})
                 .addTo(map)
@@ -98,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
         map.setView(newSelectedMarker.getLatLng(), 16);
         newSelectedMarker.openPopup();
         lastSelectedMarker = old_id;
-        updatePopupContent(newSelectedMarker.getPopup().getContent(), data[old_id]);
+        updatePopupContent(newSelectedMarker.getPopup().getContent(), locationData[old_id]);
     }
 
     function updatePopupContent(content, location) {
@@ -153,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     
         // Example labels for each hour of the day
-        const labels = Array.from({ length: 24 }, (_, i) => `Hour ${i + 1}`);
+        const labels = Array.from({ length: 24 }, (_, i) => `hour ${i + 1}`);
     
         // Access the data based on provided bikeType and rideType
         const dataPath = bikeType.toLowerCase() + '_bike';
@@ -174,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Hide search results when clicking outside the search bar or results
     document.addEventListener('click', function(event) {
-        if (!searchBar.contains(event.target) && !searchResults.contains(event.target)) {
+        if (!searchBar.contains(event.target) and !searchResults.contains(event.target)) {
             searchResults.style.display = 'none';
         }
     });
