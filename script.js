@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     
         // Example labels for each hour of the day
-        const labels = Array.from({ length: 24 }, (_, i) => `Hour ${i + 1}`);
+        const labels = Array.from({ length: 24 }, (_, i) => `${i}:00`);
         const currentHour = new Date().getHours(); // Zero-based index of the current hour
     
         // Access the data based on provided bikeType and rideType
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
             labels: labels,
             datasets: [
                 {
-                    label: `${bikeType} Bike ${rideType} Count`,
+                    label: `Average Hourly ${bikeType} Bike ${rideType} Counts`,
                     data: counts,
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderColor: 'rgba(54, 162, 235, 1)',
