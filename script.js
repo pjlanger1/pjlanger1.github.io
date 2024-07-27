@@ -104,42 +104,64 @@ document.addEventListener('DOMContentLoaded', function() {
     function updatePopupContent(content, location) {
         const ctx = document.getElementById(`chart-${location.old_id}`).getContext('2d');
         let chart = window.chartInstances = window.chartInstances || {};
-
+    
         const statusInfo = document.querySelector(`.status-info[data-id="${location.old_id}"]`);
         statusInfo.textContent = `Bike: Classic, Ride: End`; // Initial status
-
+    
         document.querySelectorAll(`.toggle-switch input[data-id="${location.old_id}"]`).forEach(input => {
             input.addEventListener('change', function() {
                 const iconType = this.getAttribute('data-type');
                 const isChecked = this.checked;
                 const img = this.parentNode.querySelector('span img');
                 img.src = isChecked ? `images/${iconType}-on-icon.png` : `images/${iconType}-off-icon.png`;
-
+    
                 const bikeType = (iconType === 'thunderbolt' && isChecked) ? "Electric" : "Classic";
                 const rideType = (iconType === 'arrow-up' && isChecked) ? "Start" : "End";
                 statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
-
+    
                 // Initialize or update chart
                 if (!chart[location.old_id]) {
                     chart[location.old_id] = new Chart(ctx, {
                         type: 'bar',
-                        data: getChartData(location, "Classic", "End"), // Default data
-                        options: {
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            }
-                        }
+                        data: getChartData(location, bikeType, rideType),
+                        options: chartOptions(location)
                     });
                 } else {
-                    const newChartData = getChartData(location, bikeType, rideType);
-                    const existingChart = chart[location.old_id];
-                    existingChart.data = newChartData;
-                    existingChart.update();
+                    chart[location.old_id].data = getChartData(location, bikeType, rideType);
+                    chart[location.old_id].options = chartOptions(location);
+                    chart[location.old_id].update();
                 }
             });
         });
+    }
+
+    function chartOptions(location) {
+        const currentHour = new Date().getHours(); // Current hour
+        return {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                annotation: {
+                    annotations: {
+                        line1: {
+                            type: 'line',
+                            mode: 'vertical',
+                            scaleID: 'x-axis-0',
+                            value: currentHour,
+                            borderColor: 'red',
+                            borderWidth: 3,
+                            label: {
+                                enabled: true,
+                                content: 'Current Hour'
+                            }
+                        }
+                    }
+                }
+            }
+        };
     }
 
     function getChartData(location, bikeType, rideType) {
@@ -153,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     
         // Example labels for each hour of the day
-        const labels = Array.from({ length: 24 }, (_, i) => `Hour ${i + 1}`);
+        const labels = Array.from({ length: 24 }, (_, i) => `Hour ${i}`);
         const currentHour = new Date().getHours(); // Get the current hour to draw the line
         console.log("currhr", currentHour);
 
