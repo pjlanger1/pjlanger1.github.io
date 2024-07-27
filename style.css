@@ -16,12 +16,12 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: 'Montserrat', sans-serif;
-    background-color: #f4f4f4; /* Consistent background color */
+    background-color: #f4f4f4;
 }
 
 header {
-    background-color: #f4f4f4; /* Light grey background for the header */
-    color: #333; /* Dark text for contrast */
+    background-color: #f4f4f4;
+    color: #333;
     padding: 10px 20px;
     text-align: center;
     position: relative; 
@@ -30,14 +30,14 @@ header {
 nav ul {
     list-style-type: none;
     padding: 0;
-    margin: 0; 
+    margin: 0;
     display: inline-block;
 }
 
 nav ul li {
     display: inline;
     margin-right: 10px;
-    color: #333; /* Dark text for visibility */
+    color: #333;
 }
 
 main {
@@ -47,18 +47,18 @@ main {
 
 h1, h2 {
     font-family: 'Montserrat', sans-serif;
-    color: #333; /* Dark text for headings */
+    color: #333;
 }
 
 .g1, .g2 {
     font-family: 'Montserrat', sans-serif;
     font-weight: 300;  
-    color: rgba(128, 128, 128, 0.5); /* Subtle grey text */
+    color: rgba(128, 128, 128, 0.5);
 }
 
 footer {
-    background-color: #f4f4f4; /* Light grey background for footer */
-    color: #333; /* Dark text */
+    background-color: #f4f4f4;
+    color: #333;
     padding: 10px 20px;
     text-align: center;
 }
@@ -94,7 +94,7 @@ footer p {
 }
 
 .search-input:focus {
-    border-color: #007BFF; /* Blue focus color for visibility */
+    border-color: #007BFF;
 }
 
 .search-results {
@@ -121,94 +121,89 @@ footer p {
     background-color: #f8f9fa;
 }
 
-/* Popup styles */
 .leaflet-popup {
-    width: 350px; /* Increased width for more content */
-    background-color: transparent; /* Ensuring no background from container */
+    width: 350px;
+    background-color: transparent;
 }
 
-/* Detailed styling for parts of the popup */
 .popup-content h4 {
-    margin-bottom: 15px; /* Adds more space below the header */
+    margin-bottom: 15px;
 }
 
 .popup-controls {
-    margin-top: 10px; /* Adds space above the controls */
+    margin-top: 10px;
 }
 
 .leaflet-popup-content-wrapper {
-    background: #333; /* Dark grey background */
-    color: #fff; /* White text */
-    border-radius: 8px; /* Optional: rounded corners */
-    font-family: 'Montserrat', sans-serif; /* Ensuring consistent font family */
-    padding: 1em; /* Adequate padding around the content */
+    background: #333;
+    color: #fff;
+    border-radius: 8px;
+    padding: 1em;
 }
 
 .leaflet-popup-tip-container {
-    width: 40px; /* Adjust width of the tip for a better alignment */
-    height: 20px; /* Adjust height of the tip */
+    width: 40px;
+    height: 20px;
 }
 
 .leaflet-popup-tip {
-    background: #333; /* Matching the tip color with the content wrapper */
+    background: #333;
 }
 
 .leaflet-popup-content {
-    max-height: 200px; /* Setting a max height with scrolling enabled */
-    overflow-y: auto; /* Allow scroll if content is too long */
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .toggle-switch input[type="checkbox"] {
-    visibility: hidden; /* Hides the checkbox but keeps it in the flow for accessibility */
-    position: absolute; /* Optionally position it out of the visible area */
-    margin-left: -9999px; /* Move it off-screen if necessary */
+    visibility: hidden;
+    position: absolute;
+    margin-left: -9999px;
 }
 
 .toggle-switch .slider {
     display: inline-block;
-    width: 34px; /* Width of the slider area */
-    height: 20px; /* Height of the slider area */
+    width: 34px;
+    height: 20px;
     position: relative;
     cursor: pointer;
-    background-color: #ccc; /* Background of the slider when off */
+    background-color: #ccc;
     transition: background-color 0.4s;
 }
 
 .toggle-switch .slider.round {
-    border-radius: 34px; /* Rounded corners for the slider */
+    border-radius: 34px;
 }
 
 .toggle-switch .slider.round img {
     position: absolute;
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Ensure the centering is precise */
-    pointer-events: none; /* Prevents the image from interfering with toggle functionality */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
 }
 
 .toggle-switch input[type="checkbox"]:checked + .slider {
-    background-color: #4CAF50; /* Green background when on */
+    background-color: #4CAF50;
 }
-
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
     .search-input, .search-results {
-        width: 90%;  // Makes search bar and results wider on smaller screens
+        width: 95%; /* Increased to 95% to make them wider on smaller screens */
     }
 
     .leaflet-popup {
-        width: 90%;  // Makes popup wider on smaller screens
+        width: 95%; /* Popup width adjusted to be wider on smaller screens */
     }
 
     nav ul {
-        display: block;  // Stacks nav items vertically on smaller screens
+        display: block; /* Stacks nav items vertically on smaller screens */
         text-align: center;
     }
 
     nav ul li {
-        display: block;  // Stacks nav items vertically
-        margin: 5px 0;  // Adds space between items
+        display: block; /* Stacks nav items vertically */
+        margin: 10px 0; /* Increased space between items for easier tapping */
     }
 }
-
