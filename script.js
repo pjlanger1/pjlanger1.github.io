@@ -67,25 +67,6 @@ document.addEventListener('DOMContentLoaded', function() {
     .catch(error => console.error('Error loading JSON data:', error));
 
     /**function updatePopupContent(location) {
-        const statusInfo = document.querySelector(`.status-info[data-id="${location.old_id}"]`);
-        document.querySelectorAll(`.toggle-switch input[data-id="${location.old_id}"]`).forEach(input => {
-            input.addEventListener('change', function() {
-                const iconType = this.getAttribute('data-type');
-                const isChecked = this.checked;
-                const img = this.parentNode.querySelector('span img');
-                img.src = isChecked ? `images/${iconType}-on-icon.png` : `images/${iconType}-off-icon.png`;
-                // Dynamically update the status based on the toggle state
-                if (iconType === 'thunderbolt') {
-                    const bikeType = isChecked ? "Electric" : "Classic";
-                    statusInfo.textContent = `Bike: ${bikeType}, ${rideType}`;
-                } else if (iconType === 'arrow-up') {
-                    const rideType = isChecked ? "Start" : "End";
-                    statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
-                }
-            });
-        });
-    } **/
-    function updatePopupContent(location) {
         let bikeType = "Classic"; // Default value
         let rideType = "End";     // Default value
     
@@ -113,7 +94,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
             });
         });
+    } **/
+
+    function updatePopupContent(location) {
+        map.on('popupopen', function(e) {
+            if (e.popup._source.options.locationId === location.old_id) {
+                let bikeType = "Classic"; // Default value
+                let rideType = "End";     // Default value
+    
+                const statusInfo = document.querySelector(`.status-info[data-id="${location.old_id}"]`);
+                if (statusInfo) {
+                    statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
+    
+                    document.querySelectorAll(`.toggle-switch input[data-id="${location.old_id}"]`).forEach(input => {
+                        input.removeEventListener('change'); // Remove existing listeners to prevent duplicates
+                        input.addEventListener('change', function() {
+                            const iconType = this.getAttribute('data-type');
+                            const isChecked = this.checked;
+                            const img = this.parentNode.querySelector('span img');
+    
+                            img.src = isChecked ? `images/${iconType}-on-icon.png` : `images/${iconType}-off-icon.png`;
+    
+                            if (iconType === 'thunderbolt') {
+                                bikeType = isChecked ? "Electric" : "Classic";
+                            } else if (iconType === 'arrow-up') {
+                                rideType = isChecked ? "Start" : "End";
+                            }
+    
+                            statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
+                        });
+                    });
+                }
+            }
+        });
     }
+
 
 
     function setupSearch(locations, markers) {
