@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         iconUrl: 'images/marker-icon-selected.png',
         iconSize: [25, 41],
         iconAnchor: [12, 41],
-        popupAnchor: [30, -200]
+        popupAnchor: [30, -50]
     });
 
     let markers = {};
