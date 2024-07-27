@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(response => response.json())
     .then(data => {
         Object.values(data).forEach(location => {
-            const marker = L.marker([location.lat, location.lon], {icon: customIcon})
+            const marker = L.marker([location.lat, location.lon], {icon: customIcon, locationData: location})
                 .addTo(map)
                 .bindPopup(getPopupContent(location))
                 .on('click', function() {
@@ -57,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span class="slider round"><img src="images/arrow_up_off_icon.png" alt="Trend"></span>
                     </label>
                 </div>
+                <canvas id="chart-${location.old_id}" width="400" height="200"></canvas>
                 <div id="popup-data-${location.old_id}"></div>
             </div>
         `;
@@ -97,22 +98,62 @@ document.addEventListener('DOMContentLoaded', function() {
         map.setView(newSelectedMarker.getLatLng(), 16);
         newSelectedMarker.openPopup();
         lastSelectedMarker = old_id;
-        updatePopupContent(newSelectedMarker.getPopup().getContent());
+        updatePopupContent(newSelectedMarker.getPopup().getContent(), newSelectedMarker.options.locationData);
     }
 
-    function updatePopupContent(content) {
-        const statusInfo = document.querySelector(`.status-info[data-id="${lastSelectedMarker}"]`);
-        document.querySelectorAll(`.toggle-switch input[data-id="${lastSelectedMarker}"]`).forEach(input => {
+    function updatePopupContent(content, location) {
+        const ctx = document.getElementById(`chart-${location.old_id}`).getContext('2d');
+        let chart = window.chartInstances = window.chartInstances || {};
+
+        const statusInfo = document.querySelector(`.status-info[data-id="${location.old_id}"]`);
+        statusInfo.textContent = `Bike: Classic, Ride: End`; // Initial status
+
+        document.querySelectorAll(`.toggle-switch input[data-id="${location.old_id}"]`).forEach(input => {
             input.addEventListener('change', function() {
                 const iconType = this.getAttribute('data-type');
                 const isChecked = this.checked;
                 const img = this.parentNode.querySelector('span img');
                 img.src = isChecked ? `images/${iconType}-on-icon.png` : `images/${iconType}-off-icon.png`;
+
                 const bikeType = (iconType === 'thunderbolt' && isChecked) ? "Electric" : "Classic";
                 const rideType = (iconType === 'arrow-up' && isChecked) ? "Start" : "End";
                 statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
+
+                // Initialize or update chart
+                if (!chart[location.old_id]) {
+                    chart[location.old_id] = new Chart(ctx, {
+                        type: 'bar',
+                        data: getChartData(location, "Classic", "End"), // Default data
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    const newChartData = getChartData(location, bikeType, rideType);
+                    const existingChart = chart[location.old_id];
+                    existingChart.data = newChartData;
+                    existingChart.update();
+                }
             });
         });
+    }
+
+    function getChartData(location, bikeType, rideType) {
+        // Modify this function based on how your actual data is structured
+        return {
+            labels: ['Hour 1', 'Hour 2', ..., 'Hour 24'], // Example labels
+            datasets: [{
+                label: `${bikeType} Bike ${rideType} Count`,
+                data: location.data[bikeType.toLowerCase() + '_bike'][rideType.toLowerCase() + '_count'], // Adjust based on actual data structure
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        };
     }
 
     // Hide search results when clicking outside the search bar or results
