@@ -106,31 +106,46 @@ document.addEventListener('DOMContentLoaded', function() {
         let chart = window.chartInstances = window.chartInstances || {};
     
         const statusInfo = document.querySelector(`.status-info[data-id="${location.old_id}"]`);
-        statusInfo.textContent = `Bike: Classic, Ride: End`; // Initial status
     
+        // Function to update the chart and status based on toggle states
+        function updateBasedOnToggles() {
+            const powerToggle = document.querySelector(`.power-toggle[data-id="${location.old_id}"]`);
+            const trendToggle = document.querySelector(`.trend-toggle[data-id="${location.old_id}"]`);
+    
+            const bikeType = powerToggle.checked ? "Electric" : "Classic";
+            const rideType = trendToggle.checked ? "Start" : "End";
+            statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
+    
+            if (!chart[location.old_id]) {
+                chart[location.old_id] = new Chart(ctx, {
+                    type: 'bar',
+                    data: getChartData(location, bikeType, rideType),
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            } else {
+                const newChartData = getChartData(location, bikeType, rideType);
+                const existingChart = chart[location.old_id];
+                existingChart.data = newChartData;
+                existingChart.update();
+            }
+        }
+    
+        // Initialize chart and status when popup opens
+        updateBasedOnToggles();
+    
+        // Event listeners for toggle changes
         document.querySelectorAll(`.toggle-switch input[data-id="${location.old_id}"]`).forEach(input => {
             input.addEventListener('change', function() {
-                const iconType = this.getAttribute('data-type');
-                const isChecked = this.checked;
                 const img = this.parentNode.querySelector('span img');
-                img.src = isChecked ? `images/${iconType}-on-icon.png` : `images/${iconType}-off-icon.png`;
-    
-                const bikeType = (iconType === 'thunderbolt' && isChecked) ? "Electric" : "Classic";
-                const rideType = (iconType === 'arrow-up' && isChecked) ? "Start" : "End";
-                statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
-    
-                // Initialize or update chart
-                if (!chart[location.old_id]) {
-                    chart[location.old_id] = new Chart(ctx, {
-                        type: 'bar',
-                        data: getChartData(location, bikeType, rideType),
-                        //options: chartOptions(location)
-                    });
-                } else {
-                    chart[location.old_id].data = getChartData(location, bikeType, rideType);
-                    //chart[location.old_id].options = chartOptions(location);
-                    chart[location.old_id].update();
-                }
+                const iconType = this.getAttribute('data-type');
+                img.src = this.checked ? `images/${iconType}-on-icon.png` : `images/${iconType}-off-icon.png`;
+                updateBasedOnToggles();  // Update everything based on new toggle states
             });
         });
     }
