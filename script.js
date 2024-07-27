@@ -23,16 +23,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let markers = {};
     let lastSelectedMarker = null;
-    let locationData = {}; // Store location data globally
     const searchBar = document.getElementById('search-bar');
     const searchResults = document.getElementById('search-results');
 
     fetch('https://raw.githubusercontent.com/pjlanger1/pjlanger1.github.io/6b81765ad8c9f9a14346688e531a5a6480420341/ref_data/bwref082024_2.json')
     .then(response => response.json())
     .then(data => {
-        locationData = data; // Store the fetched data globally
         Object.values(data).forEach(location => {
-            const marker = L.marker([location.lat, location.lon], {icon: customIcon})
+            const marker = L.marker([location.lat, location.lon], {icon: customIcon, locationData: location})
                 .addTo(map)
                 .bindPopup(getPopupContent(location))
                 .on('click', function() {
@@ -59,8 +57,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span class="slider round"><img src="images/arrow_up_off_icon.png" alt="Trend"></span>
                     </label>
                 </div>
+                <canvas id="chart-${location.old_id}" width="400" height="200"></canvas>
                 <div id="popup-data-${location.old_id}"></div>
-                <canvas id="chart-${location.old_id}" width="400" height="400"></canvas>
             </div>
         `;
     }
@@ -100,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
         map.setView(newSelectedMarker.getLatLng(), 16);
         newSelectedMarker.openPopup();
         lastSelectedMarker = old_id;
-        updatePopupContent(newSelectedMarker.getPopup().getContent(), locationData[old_id]);
+        updatePopupContent(newSelectedMarker.getPopup().getContent(), newSelectedMarker.options.locationData);
     }
 
     function updatePopupContent(content, location) {
@@ -155,12 +153,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     
         // Example labels for each hour of the day
-        const labels = Array.from({ length: 24 }, (_, i) => `hour ${i + 1}`);
+        const labels = Array.from({ length: 24 }, (_, i) => `Hour ${i + 1}`);
     
         // Access the data based on provided bikeType and rideType
         const dataPath = bikeType.toLowerCase() + '_bike';
         const countPath = rideType.toLowerCase() + '_count';
         const counts = location.data[dataPath][countPath];
+    
+        const currentHour = new Date().getHours(); // Get the current hour to draw the line
     
         return {
             labels: labels,
@@ -170,13 +170,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
-            }]
+            }],
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    annotation: {
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                yMin: 0,
+                                yMax: Math.max(...counts),
+                                borderColor: 'red',
+                                borderWidth: 2,
+                                label: {
+                                    enabled: true,
+                                    content: 'Current hour',
+                                    position: 'start'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         };
     }
 
+
     // Hide search results when clicking outside the search bar or results
     document.addEventListener('click', function(event) {
-        if (!searchBar.contains(event.target) and !searchResults.contains(event.target)) {
+        if (!searchBar.contains(event.target) && !searchResults.contains(event.target)) {
             searchResults.style.display = 'none';
         }
     });
