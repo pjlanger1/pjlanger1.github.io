@@ -26,11 +26,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBar = document.getElementById('search-bar');
     const searchResults = document.getElementById('search-results');
 
-    fetch('https://raw.githubusercontent.com/pjlanger1/pjlanger1.github.io/6b81765ad8c9f9a14346688e531a5a6480420341/ref_data/bwref082024_2.json')
+    fetch('https://raw.githubusercontent.com/pjlanger1/pjlanger1.github.io/4ea6de6d184d6b96d5697547e17181ae29d2c83b/ref_data/bwref082024_2.json')
     .then(response => response.json())
     .then(data => {
         Object.values(data).forEach(location => {
-            const marker = L.marker([location.lat, location.lon], {icon: customIcon, locationData: location})
+            const marker = L.marker([location.lat, location.lon], {icon: customIcon})
                 .addTo(map)
                 .bindPopup(getPopupContent(location))
                 .on('click', function() {
@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         <span class="slider round"><img src="images/arrow_up_off_icon.png" alt="Trend"></span>
                     </label>
                 </div>
-                <canvas id="chart-${location.old_id}" width="400" height="200"></canvas>
                 <div id="popup-data-${location.old_id}"></div>
+                <canvas id="chart-${location.old_id}" width="400" height="400"></canvas>
             </div>
         `;
     }
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
         map.setView(newSelectedMarker.getLatLng(), 16);
         newSelectedMarker.openPopup();
         lastSelectedMarker = old_id;
-        updatePopupContent(newSelectedMarker.getPopup().getContent(), newSelectedMarker.options.locationData);
+        updatePopupContent(newSelectedMarker.getPopup().getContent(), data[old_id]);
     }
 
     function updatePopupContent(content, location) {
@@ -171,7 +171,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }]
         };
     }
-    
 
     // Hide search results when clicking outside the search bar or results
     document.addEventListener('click', function(event) {
