@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let markers = {};
     let lastSelectedMarker = null;
+    const searchBar = document.getElementById('search-bar');
+    const searchResults = document.getElementById('search-results');
 
     fetch('https://raw.githubusercontent.com/pjlanger1/pjlanger1.github.io/c1663b28bab1c2201485af8c7d8c507c8637d50d/ref_data/bwref082024.json')
     .then(response => response.json())
@@ -37,28 +39,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     marker.setIcon(selectedIcon);
                     lastSelectedMarker = marker;
+                    updatePopupContent(location);
                 });
             markers[location.old_id] = marker;
         });
+        setupSearch(Object.values(data), markers);
     })
     .catch(error => console.error('Error loading JSON data:', error));
-
-    map.on('popupopen', (e) => {
-        attachToggleListeners(e.popup._source.options.locationId);
-    });
 
     function getPopupContent(location) {
         return `
             <div class="popup-content" data-id="${location.old_id}">
                 <h4>${location.name}</h4>
-                <span class="status-info">Bike: Classic, Ride: End</span>
+                <span class="status-info" data-id="${location.old_id}">Bike: Classic, Ride: End</span>
                 <div class="popup-controls">
                     <label class="toggle-switch">
-                        <input type="checkbox" class="power-toggle" data-id="${location.old_id}" data-type="power">
+                        <input type="checkbox" class="power-toggle" data-id="${location.old_id}" data-type="thunderbolt">
                         <span class="slider round"><img src="images/thunderbolt-off-icon.png" alt="Power"></span>
                     </label>
                     <label class="toggle-switch">
-                        <input type="checkbox" class="trend-toggle" data-id="${location.old_id}" data-type="trend">
+                        <input type="checkbox" class="trend-toggle" data-id="${location.old_id}" data-type="arrow-up">
                         <span class="slider round"><img src="images/arrow_up_off_icon.png" alt="Trend"></span>
                     </label>
                 </div>
@@ -66,6 +66,55 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
     }
+
+    function setupSearch(locations, markers) {
+        searchBar.addEventListener('input', function() {
+            const value = this.value.toLowerCase();
+            const filteredLocations = locations.filter(location => 
+                location.name.toLowerCase().includes(value)
+            ).slice(0, 10);
+            displaySearchResults(filteredLocations, markers, map);
+        });
+    }
+
+    function displaySearchResults(filteredLocations, markers, map) {
+        searchResults.innerHTML = '';
+        filteredLocations.forEach(location => {
+            const div = document.createElement('div');
+            div.textContent = location.name;
+            div.className = 'search-result-item';
+            div.onclick = function() {
+                searchBar.value = ''; // Clear search bar on selection
+                searchResults.style.display = 'none'; // Hide search results
+                const selectedMarker = markers[location.old_id];
+                if (selectedMarker) {
+                    map.setView([selectedMarker.getLatLng()], 16); // Zoom in
+                    selectedMarker.openPopup(); // Open the popup
+                }
+            };
+            searchResults.appendChild(div);
+        });
+        searchResults.style.display = filteredLocations.length > 0 ? 'block' : 'none';
+    }
+
+    function updatePopupContent(location) {
+        const statusInfo = document.querySelector(`.status-info[data-id="${location.old_id}"]`);
+        document.querySelectorAll(`.toggle-switch input[data-id="${location.old_id}"]`).forEach(input => {
+            input.addEventListener('change', function() {
+                const iconType = this.getAttribute('data-type');
+                const isChecked = this.checked;
+                const img = this.parentNode.querySelector('span img');
+                img.src = isChecked ? `images/${iconType}-on-icon.png` : `images/${iconType}-off-icon.png`;
+                const bikeType = document.querySelector(`.power-toggle[data-id="${location.old_id}"]`).checked ? "Electric" : "Classic";
+                const rideType = document.querySelector(`.trend-toggle[data-id="${location.old_id}"]`).checked ? "Start" : "End";
+                statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
+            });
+        });
+    }
+
+    map.on('popupopen', function(e) {
+        attachToggleListeners(e.popup._source.options.locationId);
+    });
 
     function attachToggleListeners(id) {
         document.querySelectorAll(`.toggle-switch input[data-id="${id}"]`).forEach(input => {
