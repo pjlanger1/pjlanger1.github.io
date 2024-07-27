@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     let markers = {};
-    let currentlySelectedMarker = null;
+    let lastSelectedMarker = null;
     const searchBar = document.getElementById('search-bar');
     const searchResults = document.getElementById('search-results');
 
@@ -34,15 +34,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 .addTo(map)
                 .bindPopup(getPopupContent(location))
                 .on('click', function() {
-                    if (currentlySelectedMarker) {
-                        currentlySelectedMarker.setIcon(customIcon);
-                    }
-                    this.setIcon(selectedIcon);
-                    currentlySelectedMarker = this;
+                    selectMarker(location.old_id);
                 });
             markers[location.old_id] = marker;
         });
-        setupSearch(Object.values(data), markers, map);
+        setupSearch(Object.values(data), markers);
     })
     .catch(error => console.error('Error loading JSON data:', error));
 
@@ -66,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
     }
 
-    function setupSearch(locations, markers, map) {
+    function setupSearch(locations, markers) {
         searchBar.addEventListener('input', function() {
             const value = this.value.toLowerCase();
             const filteredLocations = locations.filter(location => 
@@ -83,19 +79,46 @@ document.addEventListener('DOMContentLoaded', function() {
             div.textContent = location.name;
             div.className = 'search-result-item';
             div.onclick = function() {
-                searchBar.value = location.name; // Fill the search bar with the selected location name
-                searchResults.style.display = 'none'; // Hide results
-                const selectedMarker = markers[location.old_id];
-                if (currentlySelectedMarker) {
-                    currentlySelectedMarker.setIcon(customIcon); // Reset previous marker
-                }
-                selectedMarker.setIcon(selectedIcon);
-                map.setView(selectedMarker.getLatLng(), 16); // Zoom and center the map on the marker
-                selectedMarker.openPopup(); // Open the popup
-                currentlySelectedMarker = selectedMarker; // Update the currently selected marker
+                searchBar.value = location.name;
+                searchResults.style.display = 'none';
+                selectMarker(location.old_id);
             };
             searchResults.appendChild(div);
         });
         searchResults.style.display = filteredLocations.length > 0 ? 'block' : 'none';
     }
+
+    function selectMarker(old_id) {
+        if (lastSelectedMarker) {
+            markers[lastSelectedMarker].setIcon(customIcon);
+        }
+        const newSelectedMarker = markers[old_id];
+        newSelectedMarker.setIcon(selectedIcon);
+        map.setView(newSelectedMarker.getLatLng(), 16);
+        newSelectedMarker.openPopup();
+        lastSelectedMarker = old_id;
+        updatePopupContent(newSelectedMarker.getPopup().getContent());
+    }
+
+    function updatePopupContent(content) {
+        const statusInfo = document.querySelector(`.status-info[data-id="${lastSelectedMarker}"]`);
+        document.querySelectorAll(`.toggle-switch input[data-id="${lastSelectedMarker}"]`).forEach(input => {
+            input.addEventListener('change', function() {
+                const iconType = this.getAttribute('data-type');
+                const isChecked = this.checked;
+                const img = this.parentNode.querySelector('span img');
+                img.src = isChecked ? `images/${iconType}-on-icon.png` : `images/${iconType}-off-icon.png`;
+                const bikeType = (iconType === 'thunderbolt' && isChecked) ? "Electric" : "Classic";
+                const rideType = (iconType === 'arrow-up' && isChecked) ? "Start" : "End";
+                statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
+            });
+        });
+    }
+
+    // Hide search results when clicking outside the search bar or results
+    document.addEventListener('click', function(event) {
+        if (!searchBar.contains(event.target) && !searchResults.contains(event.target)) {
+            searchResults.style.display = 'none';
+        }
+    });
 });
