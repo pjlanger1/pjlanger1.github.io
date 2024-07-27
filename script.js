@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     chart[location.old_id] = new Chart(ctx, {
                         type: 'bar',
                         data: getChartData(location, bikeType, rideType),
-                        options: chartOptions(location)
+                        //options: chartOptions(location)
                     });
                 } else {
                     chart[location.old_id].data = getChartData(location, bikeType, rideType);
