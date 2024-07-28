@@ -102,8 +102,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updatePopupContent(content, location) {
-        const ctx = document.getElementById(`chart-${location.old_id}`).getContext('2d');
-        let chart = window.chartInstances; // Directly use the global chart instances
+        const canvasId = `chart-${location.old_id}`;
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        let chart = window.chartInstances; // Use the global chart instances
     
         const statusInfo = document.querySelector(`.status-info[data-id="${location.old_id}"]`);
     
@@ -116,18 +117,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const rideType = trendToggle.checked ? "Start" : "End";
             statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
     
-            // Initialize or update chart
-            if (!chart[location.old_id]) {
-                chart[location.old_id] = new Chart(ctx, {
-                    type: 'bar',
-                    data: getChartData(location, bikeType, rideType),
-                    options: chartOptions(location) // Assuming chartOptions is defined elsewhere and sets up the graph's options including the red line
-                });
-            } else {
-                const newChartData = getChartData(location, bikeType, rideType);
-                chart[location.old_id].data = newChartData;
-                chart[location.old_id].update();
+            // Destroy existing chart if it exists
+            if (chart[location.old_id]) {
+                chart[location.old_id].destroy();
             }
+    
+            // Initialize or update chart
+            chart[location.old_id] = new Chart(ctx, {
+                type: 'bar',
+                data: getChartData(location, bikeType, rideType),
+                options: chartOptions(location) // Assuming chartOptions is defined elsewhere and sets up the graph's options
+            });
         }
     
         // Initialize chart and status when popup opens
@@ -135,15 +135,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
         // Event listeners for toggle changes
         document.querySelectorAll(`.toggle-switch input[data-id="${location.old_id}"]`).forEach(input => {
-            input.addEventListener('change', function() {
-                const img = this.parentNode.querySelector('span img');
-                const iconType = this.getAttribute('data-type');
-                img.src = this.checked ? `images/${iconType}-on-icon.png` : `images/${iconType}-off-icon.png`;
-                updateBasedOnToggles();  // Update everything based on new toggle states
-            });
+            // Remove existing listeners to prevent accumulation
+            input.removeEventListener('change', handleToggleChange);
+            input.addEventListener('change', handleToggleChange);
         });
+    
+        // Handle toggle changes
+        function handleToggleChange() {
+            const input = this;
+            const img = input.parentNode.querySelector('span img');
+            const iconType = input.getAttribute('data-type');
+            img.src = input.checked ? `images/${iconType}-on-icon.png` : `images/${iconType}-off-icon.png`;
+            updateBasedOnToggles(); // Update everything based on new toggle states
+        }
     }
-
     
     function chartOptions(location) {
         const currentHour = new Date().getHours(); // Current hour
