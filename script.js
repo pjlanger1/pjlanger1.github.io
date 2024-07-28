@@ -150,10 +150,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    function chartOptions(location) {
+   function chartOptions(location) {
         const currentHour = new Date().getHours(); // Current hour
+    
         return {
             scales: {
+                x: {
+                    type: 'category',
+                    labels: Array.from({ length: 24 }, (_, i) => `${i}:00`), // Ensure these match the data labels
+                },
                 y: {
                     beginAtZero: true
                 }
@@ -164,8 +169,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         line1: {
                             type: 'line',
                             mode: 'vertical',
-                            scaleID: 'x-axis-0',
-                            value: currentHour,
+                            scaleID: 'x', // Ensure this matches the ID of the x-axis
+                            value: `${currentHour}:00`, // Make sure this value is in the labels array
                             borderColor: 'red',
                             borderWidth: 3,
                             label: {
@@ -178,6 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         };
     }
+
 
     function getChartData(location, bikeType, rideType) {
         // Log the location data for debugging
