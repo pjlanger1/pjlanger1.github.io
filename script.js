@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let lastSelectedMarker = null;
     const searchBar = document.getElementById('search-bar');
     const searchResults = document.getElementById('search-results');
+    window.chartInstances = {}; // Initialize the chart instances at the top level
+
 
     fetch('https://raw.githubusercontent.com/pjlanger1/pjlanger1.github.io/6b81765ad8c9f9a14346688e531a5a6480420341/ref_data/bwref082024_2.json')
     .then(response => response.json())
@@ -66,9 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function setupSearch(locations, markers) {
         searchBar.addEventListener('input', function() {
             const value = this.value.toLowerCase();
-            const filteredLocations = locations.filter(location => 
-                location.name.toLowerCase().includes(value)
-            );
+            const filteredLocations = locations.filter(location => location.name.toLowerCase().includes(value));
             displaySearchResults(filteredLocations, markers, map);
         });
     }
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updatePopupContent(content, location) {
         const ctx = document.getElementById(`chart-${location.old_id}`).getContext('2d');
-        let chart = window.chartInstances = window.chartInstances || {};
+        let chart = window.chartInstances; // Directly use the global chart instances
     
         const statusInfo = document.querySelector(`.status-info[data-id="${location.old_id}"]`);
     
@@ -116,23 +116,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const rideType = trendToggle.checked ? "Start" : "End";
             statusInfo.textContent = `Bike: ${bikeType}, Ride: ${rideType}`;
     
+            // Initialize or update chart
             if (!chart[location.old_id]) {
                 chart[location.old_id] = new Chart(ctx, {
                     type: 'bar',
                     data: getChartData(location, bikeType, rideType),
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
-                    }
+                    options: chartOptions(location) // Assuming chartOptions is defined elsewhere and sets up the graph's options including the red line
                 });
             } else {
                 const newChartData = getChartData(location, bikeType, rideType);
-                const existingChart = chart[location.old_id];
-                existingChart.data = newChartData;
-                existingChart.update();
+                chart[location.old_id].data = newChartData;
+                chart[location.old_id].update();
             }
         }
     
@@ -150,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    
     function chartOptions(location) {
         const currentHour = new Date().getHours(); // Current hour
         return {
@@ -191,42 +186,23 @@ document.addEventListener('DOMContentLoaded', function() {
     
         // Example labels for each hour of the day
         const labels = Array.from({ length: 24 }, (_, i) => `${i}:00`);
-        const currentHour = new Date().getHours(); // Zero-based index of the current hour
     
         // Access the data based on provided bikeType and rideType
         const dataPath = bikeType.toLowerCase() + '_bike';
         const countPath = rideType.toLowerCase() + '_count';
         const counts = location.data[dataPath][countPath];
     
-        // Create an array with zeros and set the value at the current hour index to a higher number to simulate a line
-        const hourIndicator = Array(24).fill(0);
-        hourIndicator[currentHour] = Math.max(...counts) * 1.2; // Ensure the line is taller than the highest bar
-    
         return {
             labels: labels,
-            datasets: [
-                {
-                    label: `Average Hourly ${bikeType} Bike ${rideType} Counts`,
-                    data: counts,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Current Hour',
-                    data: hourIndicator,
-                    backgroundColor: 'rgba(255, 0, 0, 0.5)', // Red color for the current hour indicator
-                    borderColor: 'rgba(255, 0, 0, 1)',
-                    borderWidth: 2,
-                    type: 'bar', // Render this dataset as a line
-                    fill: false, // No fill under the line
-                    pointRadius: 0 // No points on the line
-                }
-            ]
+            datasets: [{
+                label: `${bikeType} Bike ${rideType} Count`,
+                data: counts,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
         };
     }
-
-
 
     // Hide search results when clicking outside the search bar or results
     document.addEventListener('click', function(event) {
