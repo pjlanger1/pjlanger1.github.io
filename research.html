@@ -24,11 +24,15 @@
         <h2>research</h2>
         <p>how stations cluster in the citibike network</p>
         <!-- Example of an embedded image with a caption -->
+        <!--
         <figure>
             <img src="path_to_image.jpg" alt="Example Model">
             <figcaption>Caption describing the model.</figcaption>
         </figure>
+        -->
+        <!--
         <p>the citibike gbfs</p>
+        -->
 
         <!-- Snippet from Markdown file 1 -->
         <h3>cluster research</h3>
@@ -50,7 +54,13 @@
     <!-- Add marked.js library to convert Markdown to HTML -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        // Function to fetch and render markdown snippets (first few lines + images)
+        // Check if the marked library is loaded correctly
+        if (typeof marked === 'undefined') {
+            console.error('marked library is not loaded.');
+        } else {
+            console.log('marked library loaded successfully.');
+        }
+
         function fetchAndRenderMarkdown(url, elementId, maxLines = 10) {
             fetch(url)
                 .then(response => response.text())
@@ -60,7 +70,7 @@
                     // Limit the snippet to the first `maxLines` lines
                     let snippet = lines.slice(0, maxLines).join('\n');
                     // Convert the markdown to HTML using marked.js
-                    let htmlContent = marked(snippet);
+                    let htmlContent = marked.parse(snippet); // Updated API method
                     // Insert the snippet into the page
                     document.getElementById(elementId).innerHTML = htmlContent;
                 })
