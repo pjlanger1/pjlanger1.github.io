@@ -7,14 +7,16 @@
     <link rel="stylesheet" href="style.css">
     <style>
         .markdown-blurb {
-            background-color: #333; /* Dark grey background */
+            background-color: #333; /* Dark gray background */
             color: #fff; /* White text */
-            padding: 10px; /* Reduced padding */
+            padding: 15px; /* Increased padding */
             border-radius: 10px; /* Rounded edges */
-            margin-bottom: 15px; /* Reduced bottom margin */
+            margin-bottom: 30px; /* Increased bottom margin for more space */
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            max-width: 80%; /* Thinner by about 10% */
-            margin: 0 auto; /* Center align */
+            width: calc(100% - 20px); /* Thinner by 10% on each side */
+            max-width: 900px; /* Optional: Set a maximum width */
+            margin-left: auto;
+            margin-right: auto;
         }
         .markdown-blurb img {
             max-width: 60%; /* Smaller width */
@@ -58,7 +60,7 @@
 
         <!-- Snippet from Markdown file 1 -->
         <div class="markdown-blurb">
-            <h3 id="title-1"></h3> <!-- Title of the Markdown file -->
+            <h3>Cluster Research</h3>
             <p>Research Objectives:</p>
             <div id="markdown-snippet-1"></div>
             <div class="image-container">
@@ -69,7 +71,7 @@
 
         <!-- Snippet from Markdown file 2 -->
         <div class="markdown-blurb">
-            <h3 id="title-2"></h3> <!-- Title of the Markdown file -->
+            <h3>Advanced Clustering Research</h3>
             <p>Research Objectives:</p>
             <div id="markdown-snippet-2"></div>
             <div class="image-container">
@@ -86,7 +88,7 @@
     <!-- Add marked.js library to convert Markdown to HTML -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        function fetchAndRenderMarkdown(url, snippetId, titleId, maxLines = 10) {
+        function fetchAndRenderMarkdown(url, snippetId, maxLines = 10) {
             fetch(url)
                 .then(response => response.text())
                 .then(markdown => {
@@ -94,10 +96,9 @@
                     let title = lines[0]; // First line as title
                     let objectivesIndex = lines.findIndex(line => line.toLowerCase().includes('objectives'));
                     let objectives = objectivesIndex !== -1 ? lines.slice(objectivesIndex + 1, objectivesIndex + 5).join('\n') : ''; // Next few lines after objectives
-                    let snippet = [title, 'Research Objectives:', ...lines.slice(1, 2), ...objectives.split('\n').slice(0, maxLines - 2)].join('\n');
+                    let snippet = [title, ...lines.slice(1, 2), ...objectives.split('\n').slice(0, maxLines - 2)].join('\n');
                     let htmlContent = marked.parse(snippet);
                     document.getElementById(snippetId).innerHTML = htmlContent;
-                    document.getElementById(titleId).innerText = title; // Set title
                 })
                 .catch(error => console.error('error fetching markdown:', error));
         }
@@ -105,14 +106,12 @@
         fetchAndRenderMarkdown(
             'https://raw.githubusercontent.com/pjlanger1/bikeshare_codelib/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/cluster_research.md',
             'markdown-snippet-1',
-            'title-1',
             10
         );
 
         fetchAndRenderMarkdown(
             'https://raw.githubusercontent.com/pjlanger1/bikeshare_codelib/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/advanced_clustering.md',
             'markdown-snippet-2',
-            'title-2',
             10
         );
     </script>
