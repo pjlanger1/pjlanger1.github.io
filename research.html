@@ -27,13 +27,13 @@
         <!-- Snippet from Markdown file 1 -->
         <h3>cluster research</h3>
         <div id="markdown-snippet-1"></div>
-        <img id="image-1" src="" alt="Cluster Research Image" style="max-width: 100%; height: auto;">
+        <img id="image-1" src="" alt="Cluster Research Image" style="max-width: 100%; height: auto;" onerror="this.style.display='none';">
         <a href="https://github.com/pjlanger1/bikeshare_codelib/blob/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/cluster_research.md" target="_blank">read more</a>
 
         <!-- Snippet from Markdown file 2 -->
         <h3>advanced clustering research</h3>
         <div id="markdown-snippet-2"></div>
-        <img id="image-2" src="" alt="Advanced Clustering Image" style="max-width: 100%; height: auto;">
+        <img id="image-2" src="" alt="Advanced Clustering Image" style="max-width: 100%; height: auto;" onerror="this.style.display='none';">
         <a href="https://github.com/pjlanger1/bikeshare_codelib/blob/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/advanced_clustering.md" target="_blank">read more</a>
         <!-- End of the Markdown snippets -->
 
@@ -62,7 +62,14 @@
                     // Extract the first image URL from the markdown
                     let imageMatch = markdown.match(/!\[.*?\]\((.*?)\)/);
                     if (imageMatch && imageMatch[1]) {
-                        document.getElementById(imageId).src = imageMatch[1];
+                        // Ensure the URL is fully qualified
+                        let imageUrl = imageMatch[1];
+                        if (!imageUrl.startsWith('http')) {
+                            imageUrl = 'https://raw.githubusercontent.com/pjlanger1/bikeshare_codelib/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/' + imageUrl;
+                        }
+                        document.getElementById(imageId).src = imageUrl;
+                    } else {
+                        document.getElementById(imageId).style.display = 'none'; // Hide image if none found
                     }
                 })
                 .catch(error => console.error('error fetching markdown:', error));
