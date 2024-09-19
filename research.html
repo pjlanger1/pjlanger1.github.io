@@ -55,14 +55,14 @@
     </header>
     <main>
         <h2>research</h2>
-        <p>how stations cluster in the citibike network</p>
+
 
         <!-- Snippet from Markdown file 1 -->
         <div class="markdown-blurb">
             <h3>cluster research</h3>
             <div id="markdown-snippet-1"></div>
             <div class="image-container">
-                <img id="image-1" src="" alt="Cluster Research Image" onerror="this.style.display='none';">
+                <img id="image-1" src="https://github.com/pjlanger1/bikeshare_codelib/raw/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/bin/bikeshare_62024.png" alt="Cluster Research Image">
             </div>
             <a href="https://github.com/pjlanger1/bikeshare_codelib/blob/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/cluster_research.md" target="_blank" class="read-more">read more</a>
         </div>
@@ -72,7 +72,7 @@
             <h3>advanced clustering research</h3>
             <div id="markdown-snippet-2"></div>
             <div class="image-container">
-                <img id="image-2" src="" alt="Advanced Clustering Image" onerror="this.style.display='none';">
+                <img id="image-2" src="https://github.com/pjlanger1/bikeshare_codelib/raw/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/bin/clust2/h3_final_clust.png" alt="Advanced Clustering Image">
             </div>
             <a href="https://github.com/pjlanger1/bikeshare_codelib/blob/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/advanced_clustering.md" target="_blank" class="read-more">read more</a>
         </div>
@@ -85,7 +85,7 @@
     <!-- Add marked.js library to convert Markdown to HTML -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        function fetchAndRenderMarkdown(url, snippetId, imageId, maxLines = 10) {
+        function fetchAndRenderMarkdown(url, snippetId, maxLines = 10) {
             fetch(url)
                 .then(response => response.text())
                 .then(markdown => {
@@ -93,18 +93,6 @@
                     let snippet = lines.slice(0, maxLines).join('\n');
                     let htmlContent = marked.parse(snippet);
                     document.getElementById(snippetId).innerHTML = htmlContent;
-
-                    let imageMatch = markdown.match(/!\[.*?\]\((.*?)\)/);
-                    if (imageMatch && imageMatch[1]) {
-                        let imageUrl = imageMatch[1];
-                        if (!imageUrl.startsWith('http')) {
-                            let baseUrl = '/images/';
-                            imageUrl = baseUrl + imageUrl.split('/').pop();
-                        }
-                        document.getElementById(imageId).src = imageUrl;
-                    } else {
-                        document.getElementById(imageId).style.display = 'none';
-                    }
                 })
                 .catch(error => console.error('error fetching markdown:', error));
         }
@@ -112,14 +100,12 @@
         fetchAndRenderMarkdown(
             'https://raw.githubusercontent.com/pjlanger1/bikeshare_codelib/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/cluster_research.md',
             'markdown-snippet-1',
-            'image-1',
             10
         );
 
         fetchAndRenderMarkdown(
             'https://raw.githubusercontent.com/pjlanger1/bikeshare_codelib/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/advanced_clustering.md',
             'markdown-snippet-2',
-            'image-2',
             10
         );
     </script>
