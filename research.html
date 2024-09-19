@@ -5,6 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>research - bikewatch new york</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .markdown-blurb {
+            background-color: #f4f4f4; /* Light gray background */
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .markdown-blurb img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .image-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .image-container img {
+            max-width: 80%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .read-more {
+            display: inline-block;
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .read-more:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -21,18 +54,29 @@
         </nav>
     </header>
     <main>
-        
+        <h2>research</h2>
+        <p>how stations cluster in the citibike network</p>
+
         <!-- Snippet from Markdown file 1 -->
-        <h3>cluster research</h3>
-        <div id="markdown-snippet-1"></div>
-        <img id="image-1" src="" alt="Cluster Research Image" style="max-width: 100%; height: auto;" onerror="this.style.display='none';">
-        <a href="https://github.com/pjlanger1/bikeshare_codelib/blob/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/cluster_research.md" target="_blank">read more</a>
+        <div class="markdown-blurb">
+            <h3>cluster research</h3>
+            <div id="markdown-snippet-1"></div>
+            <div class="image-container">
+                <img id="image-1" src="" alt="Cluster Research Image" onerror="this.style.display='none';">
+            </div>
+            <a href="https://github.com/pjlanger1/bikeshare_codelib/blob/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/cluster_research.md" target="_blank" class="read-more">read more</a>
+        </div>
 
         <!-- Snippet from Markdown file 2 -->
-        <h3>advanced clustering research</h3>
-        <div id="markdown-snippet-2"></div>
-        <img id="image-2" src="" alt="Advanced Clustering Image" style="max-width: 100%; height: auto;" onerror="this.style.display='none';">
-        <a href="https://github.com/pjlanger1/bikeshare_codelib/blob/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/advanced_clustering.md" target="_blank">read more</a>
+        <div class="markdown-blurb">
+            <h3>advanced clustering research</h3>
+            <div id="markdown-snippet-2"></div>
+            <div class="image-container">
+                <img id="image-2" src="" alt="Advanced Clustering Image" onerror="this.style.display='none';">
+            </div>
+            <a href="https://github.com/pjlanger1/bikeshare_codelib/blob/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/advanced_clustering.md" target="_blank" class="read-more">read more</a>
+        </div>
+
     </main>
     <footer>
         <p>&copy; 2024 bikewatch by transit ventures. all rights reserved.</p>
@@ -45,47 +89,38 @@
             fetch(url)
                 .then(response => response.text())
                 .then(markdown => {
-                    // Split the markdown content by lines
                     let lines = markdown.split('\n');
-                    // Limit the snippet to the first `maxLines` lines
                     let snippet = lines.slice(0, maxLines).join('\n');
-                    // Convert the markdown to HTML using marked.js
                     let htmlContent = marked.parse(snippet);
-                    // Insert the snippet into the page
                     document.getElementById(snippetId).innerHTML = htmlContent;
 
-                    // Extract the first image URL from the markdown
                     let imageMatch = markdown.match(/!\[.*?\]\((.*?)\)/);
                     if (imageMatch && imageMatch[1]) {
-                        // Update the image URL to use local path
                         let imageUrl = imageMatch[1];
                         if (!imageUrl.startsWith('http')) {
-                            // Adjust the base URL if images are hosted locally
                             let baseUrl = '/images/';
                             imageUrl = baseUrl + imageUrl.split('/').pop();
                         }
                         document.getElementById(imageId).src = imageUrl;
                     } else {
-                        document.getElementById(imageId).style.display = 'none'; // Hide image if none found
+                        document.getElementById(imageId).style.display = 'none';
                     }
                 })
                 .catch(error => console.error('error fetching markdown:', error));
         }
 
-        // Fetch and display snippet from cluster_research.md (first 10 lines)
         fetchAndRenderMarkdown(
             'https://raw.githubusercontent.com/pjlanger1/bikeshare_codelib/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/cluster_research.md',
             'markdown-snippet-1',
             'image-1',
-            10 // Show first 10 lines
+            10
         );
 
-        // Fetch and display snippet from advanced_clustering.md (first 10 lines)
         fetchAndRenderMarkdown(
             'https://raw.githubusercontent.com/pjlanger1/bikeshare_codelib/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/advanced_clustering.md',
             'markdown-snippet-2',
             'image-2',
-            10 // Show first 10 lines
+            10
         );
     </script>
 </body>
