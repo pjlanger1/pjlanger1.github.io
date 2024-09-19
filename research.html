@@ -95,7 +95,7 @@
                     let title = lines[0]; // First line as title
                     let objectivesIndex = lines.findIndex(line => line.toLowerCase().includes('objectives'));
                     let objectives = objectivesIndex !== -1 ? lines.slice(objectivesIndex + 1, objectivesIndex + 5).join('\n') : ''; // Next few lines after objectives
-                    let snippet = [title, 'research objectives:', ...objectives.split('\n').slice(0, maxLines - 1)].join('\n');
+                    let snippet = [title, '<strong>research objectives:</strong>', ...objectives.split('\n').slice(0, maxLines - 1)].join('\n');
                     let htmlContent = marked.parse(snippet);
                     document.getElementById(snippetId).innerHTML = htmlContent;
                 })
