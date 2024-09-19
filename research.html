@@ -22,9 +22,9 @@
     </header>
     <main>
         <h2>research</h2>
-        <p>how stations cluster in the citibike network</p>
+        <p>here are a few links to markdown reports on some of the feature engineering we've done and some of the insights it has yielded.</p>
         <!-- Example of an embedded image with a caption -->
-        <figure>
+        <!--<figure>
             <img src="path_to_image.jpg" alt="Example Model">
             <figcaption>Caption describing the model.</figcaption>
         </figure>
@@ -50,31 +50,35 @@
     <!-- Add marked.js library to convert Markdown to HTML -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        // Function to fetch and render markdown snippets
-        function fetchAndRenderMarkdown(url, elementId, snippetLength = 200) {
+        // Function to fetch and render markdown snippets (first few lines + images)
+        function fetchAndRenderMarkdown(url, elementId, maxLines = 10) {
             fetch(url)
                 .then(response => response.text())
                 .then(markdown => {
+                    // Split the markdown content by lines
+                    let lines = markdown.split('\n');
+                    // Limit the snippet to the first `maxLines` lines
+                    let snippet = lines.slice(0, maxLines).join('\n');
                     // Convert the markdown to HTML using marked.js
-                    let htmlContent = marked(markdown);
-                    // Optionally truncate the content to show only a snippet
-                    let snippet = htmlContent.substring(0, snippetLength) + '...';
+                    let htmlContent = marked(snippet);
                     // Insert the snippet into the page
-                    document.getElementById(elementId).innerHTML = snippet;
+                    document.getElementById(elementId).innerHTML = htmlContent;
                 })
                 .catch(error => console.error('Error fetching markdown:', error));
         }
 
-        // Fetch and display snippet from cluster_research.md
+        // Fetch and display snippet from cluster_research.md (first 10 lines)
         fetchAndRenderMarkdown(
             'https://raw.githubusercontent.com/pjlanger1/bikeshare_codelib/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/cluster_research.md',
-            'markdown-snippet-1'
+            'markdown-snippet-1',
+            10 // Show first 10 lines
         );
 
-        // Fetch and display snippet from advanced_clustering.md
+        // Fetch and display snippet from advanced_clustering.md (first 10 lines)
         fetchAndRenderMarkdown(
             'https://raw.githubusercontent.com/pjlanger1/bikeshare_codelib/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/advanced_clustering.md',
-            'markdown-snippet-2'
+            'markdown-snippet-2',
+            10 // Show first 10 lines
         );
     </script>
 </body>
