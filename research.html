@@ -14,14 +14,14 @@
             <ul>
                 <li><a href="index.html#home">home</a></li>
                 <li><a href="index.html#models">models & analytics</a></li>
-                    <li><a href="index.html#research">research</a></li>
+                <li><a href="index.html#research">research</a></li>
                 <li><a href="index.html#python package">python package</a></li>
                 <li><a href="index.html#about">about bikewatch and transit ventures</a></li>
             </ul>
         </nav>
     </header>
     <main>
-        <h2>research/h2>
+        <h2>research</h2>
         <p>how stations cluster in the citibike network</p>
         <!-- Example of an embedded image with a caption -->
         <figure>
@@ -29,10 +29,53 @@
             <figcaption>Caption describing the model.</figcaption>
         </figure>
         <p>the citibike gbfs</p>
+
+        <!-- Snippet from Markdown file 1 -->
+        <h3>Cluster Research</h3>
+        <div id="markdown-snippet-1"></div>
+        <a href="https://github.com/pjlanger1/bikeshare_codelib/blob/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/cluster_research.md" target="_blank">Read more</a>
+
+        <!-- Snippet from Markdown file 2 -->
+        <h3>Advanced Clustering Research</h3>
+        <div id="markdown-snippet-2"></div>
+        <a href="https://github.com/pjlanger1/bikeshare_codelib/blob/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/advanced_clustering.md" target="_blank">Read more</a>
+        <!-- End of the Markdown snippets -->
+
         <!-- Add more content and images as needed -->
     </main>
     <footer>
         <p>&copy; 2024 bikewatch by transit ventures. all rights reserved.</p>
     </footer>
+
+    <!-- Add marked.js library to convert Markdown to HTML -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        // Function to fetch and render markdown snippets
+        function fetchAndRenderMarkdown(url, elementId, snippetLength = 200) {
+            fetch(url)
+                .then(response => response.text())
+                .then(markdown => {
+                    // Convert the markdown to HTML using marked.js
+                    let htmlContent = marked(markdown);
+                    // Optionally truncate the content to show only a snippet
+                    let snippet = htmlContent.substring(0, snippetLength) + '...';
+                    // Insert the snippet into the page
+                    document.getElementById(elementId).innerHTML = snippet;
+                })
+                .catch(error => console.error('Error fetching markdown:', error));
+        }
+
+        // Fetch and display snippet from cluster_research.md
+        fetchAndRenderMarkdown(
+            'https://raw.githubusercontent.com/pjlanger1/bikeshare_codelib/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/cluster_research.md',
+            'markdown-snippet-1'
+        );
+
+        // Fetch and display snippet from advanced_clustering.md
+        fetchAndRenderMarkdown(
+            'https://raw.githubusercontent.com/pjlanger1/bikeshare_codelib/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/advanced_clustering.md',
+            'markdown-snippet-2'
+        );
+    </script>
 </body>
 </html>
