@@ -23,25 +23,17 @@
     <main>
         <h2>research</h2>
         <p>how stations cluster in the citibike network</p>
-        <!-- Example of an embedded image with a caption -->
-        <!--
-        <figure>
-            <img src="path_to_image.jpg" alt="Example Model">
-            <figcaption>Caption describing the model.</figcaption>
-        </figure>
-        -->
-        <!--
-        <p>the citibike gbfs</p>
-        -->
-
+        
         <!-- Snippet from Markdown file 1 -->
         <h3>cluster research</h3>
         <div id="markdown-snippet-1"></div>
+        <img id="image-1" src="" alt="Cluster Research Image" style="max-width: 100%; height: auto;">
         <a href="https://github.com/pjlanger1/bikeshare_codelib/blob/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/cluster_research.md" target="_blank">read more</a>
 
         <!-- Snippet from Markdown file 2 -->
         <h3>advanced clustering research</h3>
         <div id="markdown-snippet-2"></div>
+        <img id="image-2" src="" alt="Advanced Clustering Image" style="max-width: 100%; height: auto;">
         <a href="https://github.com/pjlanger1/bikeshare_codelib/blob/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/advanced_clustering.md" target="_blank">read more</a>
         <!-- End of the Markdown snippets -->
 
@@ -54,14 +46,7 @@
     <!-- Add marked.js library to convert Markdown to HTML -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
-        // Check if the marked library is loaded correctly
-        if (typeof marked === 'undefined') {
-            console.error('marked library is not loaded.');
-        } else {
-            console.log('marked library loaded successfully.');
-        }
-
-        function fetchAndRenderMarkdown(url, elementId, maxLines = 10) {
+        function fetchAndRenderMarkdown(url, snippetId, imageId, maxLines = 10) {
             fetch(url)
                 .then(response => response.text())
                 .then(markdown => {
@@ -70,9 +55,15 @@
                     // Limit the snippet to the first `maxLines` lines
                     let snippet = lines.slice(0, maxLines).join('\n');
                     // Convert the markdown to HTML using marked.js
-                    let htmlContent = marked.parse(snippet); // Updated API method
+                    let htmlContent = marked.parse(snippet);
                     // Insert the snippet into the page
-                    document.getElementById(elementId).innerHTML = htmlContent;
+                    document.getElementById(snippetId).innerHTML = htmlContent;
+
+                    // Extract the first image URL from the markdown
+                    let imageMatch = markdown.match(/!\[.*?\]\((.*?)\)/);
+                    if (imageMatch && imageMatch[1]) {
+                        document.getElementById(imageId).src = imageMatch[1];
+                    }
                 })
                 .catch(error => console.error('error fetching markdown:', error));
         }
@@ -81,6 +72,7 @@
         fetchAndRenderMarkdown(
             'https://raw.githubusercontent.com/pjlanger1/bikeshare_codelib/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/cluster_research.md',
             'markdown-snippet-1',
+            'image-1',
             10 // Show first 10 lines
         );
 
@@ -88,6 +80,7 @@
         fetchAndRenderMarkdown(
             'https://raw.githubusercontent.com/pjlanger1/bikeshare_codelib/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/advanced_clustering.md',
             'markdown-snippet-2',
+            'image-2',
             10 // Show first 10 lines
         );
     </script>
