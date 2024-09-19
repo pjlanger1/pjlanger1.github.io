@@ -65,7 +65,13 @@
                         // Ensure the URL is fully qualified
                         let imageUrl = imageMatch[1];
                         if (!imageUrl.startsWith('http')) {
-                            imageUrl = 'https://raw.githubusercontent.com/pjlanger1/bikeshare_codelib/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/' + imageUrl;
+                            // Fix the image URL by avoiding double path segments
+                            let baseUrl = 'https://raw.githubusercontent.com/pjlanger1/bikeshare_codelib/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/';
+                            if (imageUrl.startsWith('aws_suite/documentation/')) {
+                                imageUrl = baseUrl + imageUrl.replace('aws_suite/documentation/', '');
+                            } else {
+                                imageUrl = baseUrl + imageUrl;
+                            }
                         }
                         document.getElementById(imageId).src = imageUrl;
                     } else {
