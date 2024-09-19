@@ -8,24 +8,20 @@
     <style>
         .markdown-blurb {
             background-color: #f4f4f4; /* Light gray background */
-            padding: 15px;
+            padding: 10px; /* Reduced padding */
             border-radius: 5px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px; /* Reduced bottom margin */
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         }
         .markdown-blurb img {
-            max-width: 100%;
+            max-width: 70%; /* Smaller width */
             height: auto;
+            max-height: 200px; /* Set a standard height */
             border-radius: 5px;
         }
         .image-container {
             text-align: center;
-            margin-bottom: 20px;
-        }
-        .image-container img {
-            max-width: 80%;
-            height: auto;
-            border-radius: 5px;
+            margin-bottom: 15px; /* Reduced margin bottom */
         }
         .read-more {
             display: inline-block;
@@ -55,11 +51,11 @@
     </header>
     <main>
         <h2>research</h2>
-
+        <p>how stations cluster in the citibike network</p>
 
         <!-- Snippet from Markdown file 1 -->
         <div class="markdown-blurb">
-            <h3>cluster research</h3>
+            <h3>Cluster Research</h3>
             <div id="markdown-snippet-1"></div>
             <div class="image-container">
                 <img id="image-1" src="https://github.com/pjlanger1/bikeshare_codelib/raw/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/bin/bikeshare_62024.png" alt="Cluster Research Image">
@@ -69,7 +65,7 @@
 
         <!-- Snippet from Markdown file 2 -->
         <div class="markdown-blurb">
-            <h3>advanced clustering research</h3>
+            <h3>Advanced Clustering Research</h3>
             <div id="markdown-snippet-2"></div>
             <div class="image-container">
                 <img id="image-2" src="https://github.com/pjlanger1/bikeshare_codelib/raw/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/bin/clust2/h3_final_clust.png" alt="Advanced Clustering Image">
@@ -90,7 +86,10 @@
                 .then(response => response.text())
                 .then(markdown => {
                     let lines = markdown.split('\n');
-                    let snippet = lines.slice(0, maxLines).join('\n');
+                    let title = lines[0]; // First line as title
+                    let objectivesIndex = lines.findIndex(line => line.toLowerCase().includes('objectives'));
+                    let objectives = objectivesIndex !== -1 ? lines.slice(objectivesIndex + 1, objectivesIndex + 5).join('\n') : ''; // Next few lines after objectives
+                    let snippet = [title, ...lines.slice(1, 2), ...objectives.split('\n').slice(0, maxLines - 2)].join('\n');
                     let htmlContent = marked.parse(snippet);
                     document.getElementById(snippetId).innerHTML = htmlContent;
                 })
