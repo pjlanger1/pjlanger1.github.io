@@ -21,8 +21,6 @@
         </nav>
     </header>
     <main>
-        <h2>research</h2>
-        <p>how stations cluster in the citibike network</p>
         
         <!-- Snippet from Markdown file 1 -->
         <h3>cluster research</h3>
@@ -35,9 +33,6 @@
         <div id="markdown-snippet-2"></div>
         <img id="image-2" src="" alt="Advanced Clustering Image" style="max-width: 100%; height: auto;" onerror="this.style.display='none';">
         <a href="https://github.com/pjlanger1/bikeshare_codelib/blob/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/advanced_clustering.md" target="_blank">read more</a>
-        <!-- End of the Markdown snippets -->
-
-        <!-- Add more content and images as needed -->
     </main>
     <footer>
         <p>&copy; 2024 bikewatch by transit ventures. all rights reserved.</p>
@@ -62,16 +57,12 @@
                     // Extract the first image URL from the markdown
                     let imageMatch = markdown.match(/!\[.*?\]\((.*?)\)/);
                     if (imageMatch && imageMatch[1]) {
-                        // Ensure the URL is fully qualified
+                        // Update the image URL to use local path
                         let imageUrl = imageMatch[1];
                         if (!imageUrl.startsWith('http')) {
-                            // Fix the image URL by avoiding double path segments
-                            let baseUrl = 'https://raw.githubusercontent.com/pjlanger1/bikeshare_codelib/6f9587b616b25a8d649311ccb225c98aeb3dbe6c/aws_suite/documentation/';
-                            if (imageUrl.startsWith('aws_suite/documentation/')) {
-                                imageUrl = baseUrl + imageUrl.replace('aws_suite/documentation/', '');
-                            } else {
-                                imageUrl = baseUrl + imageUrl;
-                            }
+                            // Adjust the base URL if images are hosted locally
+                            let baseUrl = '/images/';
+                            imageUrl = baseUrl + imageUrl.split('/').pop();
                         }
                         document.getElementById(imageId).src = imageUrl;
                     } else {
